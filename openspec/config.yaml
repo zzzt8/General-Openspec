@@ -1,0 +1,71 @@
+schema: spec-driven
+
+# Project context (optional)
+context: |
+  Tech stack: Cursor AI + OpenSpec v4.0
+  This is a personal Cursor Skills project for OpenSpec-based spec-driven development.
+  The .cursor/skills/ folder is portable across any OpenSpec-enabled project.
+
+layers:
+  engine:
+    - packages/engine/src/
+    - packages/core/src/
+    - packages/shared/src/
+  backend:
+    - server/src/
+    - server/prisma/
+  editor:
+    - apps/editor/src/
+  runtime:
+    - apps/app/src/
+  ui-skin:
+    - packages/ui/src/
+    - packages/components/src/
+
+verify:
+  engine:
+    typecheck: echo "[verify] engine layer typecheck (stub)"
+    test: echo "[verify] engine layer test (stub)"
+  backend:
+    typecheck: echo "[verify] backend layer typecheck (stub)"
+    test: echo "[verify] backend layer test (stub)"
+  editor:
+    typecheck: echo "[verify] editor layer typecheck (stub)"
+    test: echo "[verify] editor layer test (stub)"
+  runtime:
+    typecheck: echo "[verify] runtime layer typecheck (stub)"
+    test: echo "[verify] runtime layer test (stub)"
+  ui-skin:
+    typecheck: echo "[verify] ui-skin layer typecheck (stub)"
+  meta:
+    typecheck: echo "[verify] meta layer verified"
+    test: echo "[verify] meta layer test (stub)"
+  default:
+    typecheck: echo "[verify] default typecheck (stub)"
+    test: echo "[verify] default test (stub)"
+
+openspec:
+  changes_dir: openspec/changes
+  archive_dir: openspec/changes/archive
+  specs_dir: openspec/specs
+  schema_dir: openspec/schemas
+
+rules:
+  proposal:
+    - 必须包含 acceptance criteria
+    - 必须包含 change_class 和 reason 推断结论
+
+meta_rules:
+  change_class:
+    - "low: 跳过 review detail checklist，但仍需结构分析闭环（review.md）"
+    - "high: 执行完整 review checklist + test-design"
+    - "default: high"
+  task_anchor:
+    - "exploration_phase: 强制输出 Task Anchor 声明块"
+    - "creation_phase: 强制输出 Task Anchor Echo"
+  mutation_gate:
+    - "所有代码变更只能发生在 /opsx-apply"
+  failure_handling:
+    - "CLI 失败时立即停止"
+  test_failure_attribution:
+    - "存在 related/undetermined 时硬关卡阻断"

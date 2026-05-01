@@ -1,0 +1,22 @@
+# General Openspec Git Ignore
+
+# Dependencies
+node_modules/
+
+# OpenSpec workflow artifacts
+openspec/changes/
+openspec/changes/archive/
+
+# GA upgrade reports (generated during upgrade)
+openspec/docs/ga-reports/
+
+# Logs
+*.log
+
+# OS artifacts
+.DS_Store
+Thumbs.db
+
+# Test artifacts
+openspec/test-artifacts/
+openspec/docs/full-workflow-test-report-*.md
