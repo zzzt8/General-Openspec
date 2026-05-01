@@ -7,8 +7,7 @@ node_modules/
 openspec/changes/
 openspec/changes/archive/
 
-# GA upgrade reports (generated during upgrade)
-openspec/docs/ga-reports/
+# GA upgrade reports are tracked by git — use `git add -f` to add new report files
 
 # Logs
 *.log
