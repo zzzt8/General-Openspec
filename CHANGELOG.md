@@ -2,6 +2,15 @@
 
 All notable changes to General Openspec are documented here.
 
+## [v0.2] — 2026-05-02
+
+### Added
+
+- **GA upgrade system activated**: First successful self-upgrade using `/ga-upgrade` workflow
+  - Test branch created: `ga-test/v0.2`
+  - GA test suite: 12/12 PASS
+  - Upgrade report generated at `openspec/docs/ga-reports/v0.2-upgrade-report.md`
+
 ## [v0.1] — 2026-05-01
 
 ### Added
