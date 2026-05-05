@@ -7,7 +7,7 @@ tags:
   - openspec
   - layer:meta
 aliases:
-  - /opsx-propose
+  - /opsx:propose
 depends_on: []
 permissions:
   - file-write

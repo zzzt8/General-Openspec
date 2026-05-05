@@ -26,11 +26,11 @@ Guided onboarding for OpenSpec - walk through a complete workflow cycle with nar
 | category | `onboard` |
 | version | `"5.3"` |
 | tags | `openspec`, `layer:meta` |
-| aliases | `/opsx-onboard` |
+| aliases | `/opsx:onboard` |
 | depends_on | `[]` |
 
 ```bash
-/opsx-onboard
+/opsx:onboard
 ```
 
 ---
@@ -47,11 +47,11 @@ Guided onboarding for OpenSpec - walk through a complete workflow cycle with nar
 | category | `sync` |
 | version | `"5.3"` |
 | tags | `openspec`, `layer:meta` |
-| aliases | `/opsx-sync` |
+| aliases | `/opsx:sync` |
 | depends_on | `[]` |
 
 ```bash
-/opsx-sync
+/opsx:sync
 ```
 
 ---
@@ -66,11 +66,11 @@ Sync delta specs from a change to main specs. Use when the user wants to update 
 | category | `sync` |
 | version | `"5.3"` |
 | tags | `openspec`, `layer:meta` |
-| aliases | `/opsx-sync-specs` |
+| aliases | `/opsx:sync-specs` |
 | depends_on | `[]` |
 
 ```bash
-/opsx-sync-specs
+/opsx:sync-specs
 ```
 
 ---
@@ -87,11 +87,11 @@ Enter explore mode - a thinking partner for exploring ideas, investigating probl
 | category | `explore` |
 | version | `"5.3"` |
 | tags | `openspec`, `layer:meta` |
-| aliases | `/opsx-explore` |
+| aliases | `/opsx:explore` |
 | depends_on | `[]` |
 
 ```bash
-/opsx-explore
+/opsx:explore
 ```
 
 ---
@@ -108,11 +108,11 @@ Propose a new change with all artifacts generated in one step. Use when the user
 | category | `propose` |
 | version | `"5.3"` |
 | tags | `openspec`, `layer:meta` |
-| aliases | `/opsx-propose` |
+| aliases | `/opsx:propose` |
 | depends_on | `[]` |
 
 ```bash
-/opsx-propose
+/opsx:propose
 ```
 
 ---
@@ -129,11 +129,11 @@ Propose a new change with all artifacts generated in one step. Use when the user
 | category | `meta` |
 | version | `"5.3"` |
 | tags | `openspec`, `layer:meta` |
-| aliases | `/opsx-plan` |
+| aliases | `/opsx:plan` |
 | depends_on | `openspec-explore` |
 
 ```bash
-/opsx-plan
+/opsx:plan
 ```
 
 ---
@@ -148,11 +148,11 @@ Skill 系统维护工具。合并了 skill-list / skill-deps / skill-validate / 
 | category | `meta` |
 | version | `"5.3"` |
 | tags | `openspec`, `layer:meta` |
-| aliases | `/opsx-skill` |
+| aliases | `/opsx:skill` |
 | depends_on | `[]` |
 
 ```bash
-/opsx-skill
+/opsx:skill
 ```
 
 ---
@@ -169,18 +169,18 @@ Skill 系统维护工具。合并了 skill-list / skill-deps / skill-validate / 
 | category | `apply` |
 | version | `"5.3"` |
 | tags | `openspec`, `layer:meta` |
-| aliases | `/opsx-apply` |
+| aliases | `/opsx:apply` |
 | depends_on | `openspec-propose`, `openspec-plan` |
 
 ```bash
-/opsx-apply
+/opsx:apply
 ```
 
 ---
 
 ### openspec-continue
 
-断点续传。继续上一个未完成的 change，基于 tasks.md checkbox 恢复执行状态。续传逻辑委托给 openspec-apply。
+断点续传。继续上一个未完成的 change，基于 tasks.md checkbox 恢复执行状态。只负责定位断点，不执行任何 task。
 
 | Attr | Value |
 |------|----|
@@ -188,11 +188,11 @@ Skill 系统维护工具。合并了 skill-list / skill-deps / skill-validate / 
 | category | `apply` |
 | version | `"5.3"` |
 | tags | `openspec`, `layer:meta` |
-| aliases | `/opsx-continue`, `/opsx-apply` |
+| aliases | `/opsx:continue` |
 | depends_on | `openspec-propose`, `openspec-plan` |
 
 ```bash
-/opsx-continue
+/opsx:continue
 ```
 
 ---
@@ -209,11 +209,11 @@ Skill 系统维护工具。合并了 skill-list / skill-deps / skill-validate / 
 | category | `skip` |
 | version | `"5.3"` |
 | tags | `openspec`, `layer:meta` |
-| aliases | `/opsx-skip` |
+| aliases | `/opsx:skip` |
 | depends_on | `[]` |
 
 ```bash
-/opsx-skip
+/opsx:skip
 ```
 
 ---
@@ -230,11 +230,11 @@ Skill 系统维护工具。合并了 skill-list / skill-deps / skill-validate / 
 | category | `verify` |
 | version | `"5.3"` |
 | tags | `openspec`, `layer:meta` |
-| aliases | `/opsx-verify` |
+| aliases | `/opsx:verify` |
 | depends_on | `openspec-apply` |
 
 ```bash
-/opsx-verify
+/opsx:verify
 ```
 
 ---
@@ -251,11 +251,11 @@ Skill 系统维护工具。合并了 skill-list / skill-deps / skill-validate / 
 | category | `archive` |
 | version | `"5.3"` |
 | tags | `openspec`, `layer:meta` |
-| aliases | `/opsx-archive` |
+| aliases | `/opsx:archive` |
 | depends_on | `openspec-verify` |
 
 ```bash
-/opsx-archive
+/opsx:archive
 ```
 
 ---
@@ -272,11 +272,11 @@ Skill 系统维护工具。合并了 skill-list / skill-deps / skill-validate / 
 | category | `debug` |
 | version | `"5.3"` |
 | tags | `openspec`, `layer:meta` |
-| aliases | `/opsx-debug` |
+| aliases | `/opsx:debug` |
 | depends_on | `openspec-apply`, `openspec-verify` |
 
 ```bash
-/opsx-debug
+/opsx:debug
 ```
 
 ---
@@ -293,11 +293,11 @@ Skill 系统维护工具。合并了 skill-list / skill-deps / skill-validate / 
 | category | `review` |
 | version | `"5.3"` |
 | tags | `openspec`, `layer:meta` |
-| aliases | `/opsx-review` |
+| aliases | `/opsx:review` |
 | depends_on | `openspec-propose` |
 
 ```bash
-/opsx-review
+/opsx:review
 ```
 
 ---

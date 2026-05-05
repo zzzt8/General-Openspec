@@ -25,7 +25,7 @@
 ├── openspec-skill/            # meta       Skill 系统维护（不默认暴露）
 ├── openspec-review/           # review     设计评审（含 Test Design）
 ├── openspec-apply/            # apply      实现 tasks
-├── openspec-continue/         # apply      断点续传（委托 openspec-apply）
+├── openspec-continue/         # apply      断点续传（纯定位器）
 ├── openspec-skip/             # skip       跳过 task / 中止 change
 ├── openspec-verify/           # verify     验证实现一致性
 ├── openspec-archive/          # archive    归档 change
@@ -55,18 +55,35 @@
 | `debug` | 10 | `openspec-debug` |
 | `review` | 11 | `openspec-review` |
 
-## 常用 Skill 快速索引
+## 命令分层
+
+### Core（默认）
 
 | 命令 | Skill | 用途 |
 |------|-------|------|
-| `/opsx-onboard` | `openspec-onboard` | 初始化新项目 |
-| `/opsx-propose` | `openspec-propose` | 一次性生成完整 proposal + design + tasks |
-| `/opsx-apply` | `openspec-apply` | 实现 tasks，逐项勾选进度 |
-| `/opsx-continue` | `openspec-continue` | 从断点恢复，继续实现 |
-| `/opsx-verify` | `openspec-verify` | 验证实现与 artifacts 一致性 |
-| `/opsx-archive` | `openspec-archive` | 归档完成的 change |
-| `/opsx-review` | `openspec-review` | 设计评审 |
-| `/opsx-debug` | `openspec-debug` | 调试 apply 阶段问题 |
+| `/opsx:propose` | `openspec-propose` | 一次性生成完整 proposal + design + tasks |
+| `/opsx:explore` | `openspec-explore` | 探索代码库，理清思路 |
+| `/opsx:apply` | `openspec-apply` | 实现 tasks，逐项勾选进度 |
+| `/opsx:archive` | `openspec-archive` | 归档完成的 change |
+
+### Strict（通过 `opsx.profile: strict-review` 启用）
+
+| 命令 | Skill | 用途 |
+|------|-------|------|
+| `/opsx:verify` | `openspec-verify` | 验证实现与 artifacts 一致性 |
+| `/opsx:review` | `openspec-review` | 正式设计评审 |
+| `/opsx:debug` | `openspec-debug` | 调试 apply 阶段问题 |
+| `/opsx:sync-specs` | `openspec-sync-specs` | 将 delta specs 同步到 main |
+
+### Meta（高级用户）
+
+| 命令 | Skill | 用途 |
+|------|-------|------|
+| `/opsx:continue` | `openspec-continue` | 从断点恢复继续 apply |
+| `/opsx:skip` | `openspec-skip` | 跳过 task 或中止 change |
+| `/opsx:plan` | `openspec-plan` | 多 change 编排 |
+| `/opsx:onboard` | `openspec-onboard` | 首次使用引导 |
+| `/opsx:sync` | `openspec-sync` | 同步 CLI 和 skill 系统 |
 
 ## 工具脚本
 
@@ -113,20 +130,21 @@ node .cursor/skills/_shared/GENERATE-CONFIG.js --non-interactive --template auto
 所有项目特定配置通过 `openspec/config.yaml` 提供：
 
 ```yaml
-schema: default
+schema: spec-driven
 
-layers:
-  engine:
-    - packages/engine/src/
-  backend:
-    - server/src/
-
-verify:
-  default:
-    typecheck: pnpm typecheck
-    test: pnpm test
-
-package_manager: pnpm
+opsx:
+  profile: core-light
+  layers:
+    priority:
+      - engine
+      - backend
+    paths:
+      engine:
+        - packages/engine/src/
+  verify:
+    default:
+      typecheck: pnpm typecheck
+      test: pnpm test
 ```
 
 ## 维护
@@ -134,7 +152,7 @@ package_manager: pnpm
 ### 验证 Skill 格式
 
 ```bash
-/opsx-skill validate
+/opsx:skill validate
 ```
 
 ### 添加新 Skill

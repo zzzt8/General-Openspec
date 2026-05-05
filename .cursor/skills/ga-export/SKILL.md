@@ -25,7 +25,7 @@ Export a clean version of General Openspec.
 - **MUST** include `openspec/schemas/`, `openspec/specs/`, `openspec/config.yaml`
 - **MUST** include `README.md`
 - **MUST NOT** include `.git/` directory
-- **MUST NOT** include `VERSION` file
+- **MUST NOT** include `VERSION` file (generated at export time from VERSION file)
 - **MUST NOT** include `CHANGELOG.md`
 - **MUST NOT** include `openspec/docs/ga-reports/`
 - **MUST NOT** include `openspec/changes/` or archive
@@ -54,7 +54,7 @@ Export: General Openspec_vX.X
 Location: D:\Desktop\Product\General Openspec_vX.X\
 
 Included:
-  - .cursor/commands/ (14 files)
+  - .cursor/commands/ (13 files, colon-named)
   - .cursor/skills/ (19 skills)
   - openspec/schemas/ (schemas)
   - openspec/specs/ (6 specs)

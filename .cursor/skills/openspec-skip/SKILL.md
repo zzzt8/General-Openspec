@@ -7,7 +7,7 @@ tags:
   - openspec
   - layer:meta
 aliases:
-  - /opsx-skip
+  - /opsx:skip
 depends_on: []
 permissions:
   - file-write
@@ -25,10 +25,10 @@ verify: []
 ## 使用方式
 
 ```bash
-/opsx-skip <task-id>     # 跳过指定 task（如 T3）
-/opsx-skip --task        # 交互式选择要跳过的 task
-/opsx-skip --change      # 中止当前 change
-/opsx-skip --change <name>  # 中止指定 change
+/opsx:skip <task-id>     # 跳过指定 task（如 T3）
+/opsx:skip --task        # 交互式选择要跳过的 task
+/opsx:skip --change      # 中止当前 change
+/opsx:skip --change <name>  # 中止指定 change
 ```
 
 ## 执行流程
@@ -136,7 +136,7 @@ awk '
 - 已 commit 到主分支
 
 下一步：
-- 运行 /opsx-propose 重新开始（如需）
+- 运行 /opsx:propose 重新开始（如需）
 ```
 
 ### 3. 输出摘要

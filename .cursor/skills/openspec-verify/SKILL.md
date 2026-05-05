@@ -7,7 +7,7 @@ tags:
   - openspec
   - layer:meta
 aliases:
-  - /opsx-verify
+  - /opsx:verify
 depends_on:
   - openspec-apply
 permissions: []
@@ -18,13 +18,36 @@ verify:
 
 > **前置共享片段：** layer 映射、验证命令见 [\_shared/SHARED-LAYERS.md](../_shared/SHARED-LAYERS.md)。
 
-## 核心原则
+## Profile-Based Gating
+
+Read profile at start:
+
+```bash
+PROFILE=$(get_config_value "opsx.profile" "openspec/config.yaml" "core-light")
+GATE_ARCHIVE=$(get_config_value "opsx.gates.archive_requires_verify" "openspec/config.yaml" "false")
+```
+
+| Profile | archive_requires_verify |
+|---------|----------------------|
+| `core-light` (default) | false — verify is advisory, does not block archive |
+| `strict-review` | true |
+| `enterprise` | true |
+
+## Core Principles
 
 **verify 只做检查，不做修复。** 发现的问题由 `openspec-apply` 修复后重新 verify。
 
-## 状态读取
+## State Truth Source
 
-> 状态以 tasks.md checkbox 为主：`- [ ]` → todo，`- [x]` → done，`- [S]` → skipped。
+> Priority: official CLI > tasks.md checkbox
+
+```bash
+# Preferred: use official CLI
+openspec status --change "<name>" --json | jq '.tasks[] | select(.status == "done")'
+
+# Fallback: read tasks.md checkbox directly
+# - [ ] = todo, - [x] = done, - [S] = skipped
+```
 
 ## 执行流程
 
@@ -58,7 +81,7 @@ openspec status --change "<name>" --json
 openspec validate --all --json
 ```
 
-**输出解读：**
+**输出解读（profile-aware）：**
 
 ```json
 {
@@ -69,9 +92,14 @@ openspec validate --all --json
 }
 ```
 
-- `valid: false` → Full 验证失败，禁止 archive
-- `valid: true` + `warnings` → 警告，提示用户确认
-- `invalid > 0` → Full 验证阻断，禁止 archive
+When `GATE_ARCHIVE=false` (core-light profile):
+- `valid: false` → 报告问题，不阻断 archive
+- `warnings > 0` → 警告，用户确认后可继续
+- `invalid > 0` → 报告阻断，但可 force-archive
+
+When `GATE_ARCHIVE=true` (strict-review/enterprise):
+- `valid: false` → 硬关卡，禁止 archive
+- `invalid > 0` → 硬关卡，禁止 archive
 
 > **注意：** 官方 `openspec validate` 已整合 typecheck + test，不要再用 `$PKG_MGR typecheck/test`。
 
@@ -126,8 +154,8 @@ invoke_verify "engine" "test" "openspec/config.yaml"
 |------|------|---------|---------------------|
 | 能用 git diff 证明测试不在覆盖范围 | `unrelated_proven` | 记录归因，继续 verify | 记录归因，继续 verify |
 | 已知 flaky，失败特征与历史一致 | `flaky_proven` | 记录归因，继续 verify | 记录归因，继续 verify |
-| 测试在 git diff 覆盖范围内 | `related` | 硬关卡：不得标记完成，转 /opsx-apply 修复 | 硬关卡：不得标记完成，转 /opsx-apply 修复 |
-| 无法明确证明 | `undetermined` | **降级：warning + 记录，继续 verify** | **硬关卡：禁止给出结论，转 /opsx-debug** |
+| 测试在 git diff 覆盖范围内 | `related` | 硬关卡：不得标记完成，转 /opsx:apply 修复 | 硬关卡：不得标记完成，转 /opsx:apply 修复 |
+| 无法明确证明 | `undetermined` | **降级：warning + 记录，继续 verify** | **硬关卡：禁止给出结论，转 /opsx:debug** |
 
 #### 5.3 记录归因
 
@@ -146,7 +174,7 @@ invoke_verify "engine" "test" "openspec/config.yaml"
 
 如果存在 `related` 或 `undetermined`（非 meta 层）：
 - 输出：`[opsx-verify] Test Failure Attribution 阻断`
-- **强制**进入 /opsx-debug 并附上归因分析
+- **强制**进入 /opsx:debug 并附上归因分析
 - **禁止**给出"可以 archive"或"不可 archive"的二元结论（对 `undetermined`）
 
 如果存在 `undetermined`（meta 层）：
@@ -178,11 +206,12 @@ invoke_verify "engine" "test" "openspec/config.yaml"
 ## Guardrails
 
 - **强制**在 archive 前执行 verify
-- **强制**Full 元数据检查所有 checkbox 已完成
+- **强制**Full 元数据检查所有 checkbox 已完成（使用 CLI）
 - **强制**coherence-lite 执行 Traceability Map 核对
 - **强制**undetermined 状态必须经过三步闭环处理（详见"undetermined 处理"章节）
 - **强制**非 meta 层 undetermined 必须阻断，禁止给出 archive 结论
-- **强制**coherence-lite 失败时返回 apply 修复
+- **强制**coherence-lite 失败时返回 `/opsx:apply` 修复
+- **强制**profile-aware：core-light 下 verify 是辅助检查，不阻断 archive
 - **禁止**跳过 verify 直接 archive
 - **禁止**在 verify 阶段修复代码，只负责发现问题
 - **禁止**内联 bash/grep/sed 脚本片段（使用 xplat 函数，详见 SHARED-LAYERS.md）

@@ -7,7 +7,7 @@ tags:
   - openspec
   - layer:meta
 aliases:
-  - /opsx-sync-specs
+  - /opsx:sync-specs
 depends_on: []
 permissions:
   - file-write

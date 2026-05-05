@@ -7,7 +7,7 @@ tags:
   - openspec
   - layer:meta
 aliases:
-  - /opsx-skill
+  - /opsx:skill
 depends_on: []
 permissions: []
 risks: []
@@ -22,25 +22,25 @@ verify: []
 
 | 原命令 | 功能 |
 |--------|------|
-| `opsx-skill-list` | 列出所有 skills |
-| `opsx-skill-deps` | 显示 skill 依赖关系 |
-| `opsx-skill-validate` | 验证 skill 格式 |
-| `opsx-skill-index` | 重新生成索引 |
+| `opsx:skill list` | 列出所有 skills |
+| `opsx:skill deps` | 显示 skill 依赖关系 |
+| `opsx:skill validate` | 验证 skill 格式 |
+| `opsx:skill index` | 重新生成索引 |
 
 ## 使用方式
 
 ```bash
-/opsx-skill list                    # 列出所有 skills
-/opsx-skill list --category apply   # 按 category 过滤
-/opsx-skill list --tag openspec     # 按 tag 搜索
+/opsx:skill list                    # 列出所有 skills
+/opsx:skill list --category apply   # 按 category 过滤
+/opsx:skill list --tag openspec     # 按 tag 搜索
 
-/opsx-skill deps <name>             # 显示依赖关系
-/opsx-skill deps --all              # 显示所有依赖
+/opsx:skill deps <name>             # 显示依赖关系
+/opsx:skill deps --all              # 显示所有依赖
 
-/opsx-skill validate                # 验证所有 skills 格式
-/opsx-skill validate --fix          # 自动修复可修复的问题
+/opsx:skill validate                # 验证所有 skills 格式
+/opsx:skill validate --fix          # 自动修复可修复的问题
 
-/opsx-skill index                   # 重新生成索引
+/opsx:skill index                   # 重新生成索引
 ```
 
 ## 子命令详解
@@ -139,7 +139,7 @@ try {
 **fallbackParse 行为：**
 - 纯字符串解析，不依赖任何外部 npm 包
 - 支持简单 YAML（顶级 key: value 和列表）
-- 不支持嵌套 anchor/alias、引号字符串、复杂多行值
+- 不支持嵌套 anchor/alias，引号字符串，复杂多行值
 - 如 yaml 包可用则优先使用
 
 **错误处理：**
@@ -179,6 +179,6 @@ node .cursor/skills/_shared/GENERATE-INDEX.js
 
 ## Guardrails
 
-- **禁止**在日常开发中调用 `/opsx-skill`（不默认暴露）
+- **禁止**在日常开发中调用 `/opsx:skill`（不默认暴露）
 - **强制**validate 检查循环依赖
 - **强制**list 按 category 排序输出

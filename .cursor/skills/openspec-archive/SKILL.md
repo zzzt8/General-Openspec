@@ -7,7 +7,7 @@ tags:
   - openspec
   - layer:meta
 aliases:
-  - /opsx-archive
+  - /opsx:archive
 depends_on:
   - openspec-verify
 permissions: []
@@ -16,7 +16,25 @@ verify:
   - typecheck
 ---
 
-> **前置共享片段：** 配置规范见 [\_shared/SCHEMA.md](../_shared/SCHEMA.md)。
+> **前置共享片段：** 配置规范见 [../_shared/SCHEMA.md](../_shared/SCHEMA.md)。
+
+## Profile-Based Gating
+
+Read profile at start:
+
+```bash
+PROFILE=$(get_config_value "opsx.profile" "openspec/config.yaml" "core-light")
+REQUIRE_VERIFY=$(get_config_value "opsx.gates.archive_requires_verify" "openspec/config.yaml" "false")
+```
+
+| Profile | verify gate |
+|---------|------------|
+| `core-light` (default) | false — archive without verify is allowed |
+| `strict-review` | true |
+| `enterprise` | true |
+
+When `REQUIRE_VERIFY=false`: show a warning but allow archive even if verify was not run.
+When `REQUIRE_VERIFY=true`: block archive if verify was not passed.
 
 ## 核心职责
 
@@ -49,7 +67,14 @@ fi
 
 ### 2. 检查完成状态
 
-读取 `tasks.md`，确认所有 checkbox 为 `- [x]`（done）或 `- [S]`（skipped）。
+> State truth source: CLI first, then tasks.md checkbox.
+
+```bash
+# Preferred: use official CLI
+openspec status --change "<name>" --json | jq '.tasks[] | select(.status != "done" and .status != "skipped") | .id'
+
+# Fallback: read tasks.md
+```
 
 ### 3. Git 工作区检查
 
@@ -76,15 +101,15 @@ tasks.md checkbox 确认：所有 task 为 - [x]（done）或 - [S]（skipped）
 
 请确认：
 - [ ] 所有代码改动已 commit
-- [ ] verify 阶段已通过
+- [ ] verify 阶段已通过（profile: %PROFILE%）
 - [ ] 没有需要保留的未提交改动
 
 输入 "archive" 完成归档，或输入 "cancel" 取消。
 ```
 
-### 4.1 verify 失败时的强制归档路径
+### 4.1 verify 失败时的强制归档路径（profile-aware）
 
-当 verify 未通过时，提供用户决策：
+当 `REQUIRE_VERIFY=true` 且 verify 未通过时：
 
 ```
 ## Archive 最终确认 — <change-name>
@@ -94,8 +119,8 @@ tasks.md checkbox 确认：所有 task 为 - [x]（done）或 - [S]（skipped）
 可选操作：
 1. [ ] 强制归档（跳过 coherence 检查）
    - 输入 "force-archive" 确认强制归档
-2. [ ] 返回 apply 修复
-   - 输入 "apply" 返回 /opsx-apply
+2. [ ] 返回 /opsx:apply 修复
+   - 输入 "apply" 返回 /opsx:apply
 3. [ ] 取消归档
    - 输入 "cancel"
 
@@ -105,13 +130,17 @@ tasks.md checkbox 确认：所有 task 为 - [x]（done）或 - [S]（skipped）
 - 追加字段：force_archive_reason, force_archive_date
 ```
 
+当 `REQUIRE_VERIFY=false`（core-light profile）时：
+- 显示 verify 警告但不阻断
+- 用户可选择 archive 或返回 apply
+
 **强制归档时追加 proposal.md 字段：**
 
 ```yaml
 ---
 # 在 proposal.md frontmatter 中追加
 force_archive_reason: "测试 [TC-xxx] 归因为 undetermined，决策：接受风险强制归档"
-force_archive_date: "2026-04-20"
+force_archive_date: "YYYY-MM-DD"
 ---
 ```
 
@@ -132,7 +161,7 @@ openspec archive <name> --yes
 specs 同步状态：✓ 已更新
 
 下一步：
-- 运行 /opsx-propose 开始新 change
+- 运行 /opsx:propose 开始新 change
 ```
 
 ### 6.1 查看已归档 change 的内容
@@ -160,4 +189,5 @@ archive:
 - **强制**强制归档必须记录原因（追加到 proposal.md）
 - **禁止**在 archive 阶段重复执行 verify 的 coherence-lite checklist（职责分离）
 - **强制**状态检查以 tasks.md checkbox 为准（不是 tasks-state.json）
+- **强制**profile-aware：core-light 下 verify 未运行只警告，不阻断 archive
 - **禁止**内联 bash/grep/sed 脚本片段（使用 xplat 函数，详见 SHARED-LAYERS.md）

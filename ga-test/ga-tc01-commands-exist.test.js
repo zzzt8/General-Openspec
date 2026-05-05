@@ -3,19 +3,19 @@ const fs = require('fs');
 const path = require('path');
 
 const EXPECTED_COMMANDS = [
-  'opsx-onboard.md',
-  'opsx-sync.md',
-  'opsx-explore.md',
-  'opsx-propose.md',
-  'opsx-review.md',
-  'opsx-apply.md',
-  'opsx-verify.md',
-  'opsx-archive.md',
-  'opsx-debug.md',
-  'opsx-plan.md',
-  'opsx-continue.md',
-  'opsx-skip.md',
-  'opsx-sync-specs.md',
+  'opsx%3Aonboard.md',
+  'opsx%3Async.md',
+  'opsx%3Aexplore.md',
+  'opsx%3Apropose.md',
+  'opsx%3Areview.md',
+  'opsx%3Aapply.md',
+  'opsx%3Averify.md',
+  'opsx%3Aarchive.md',
+  'opsx%3Adebug.md',
+  'opsx%3Aplan.md',
+  'opsx%3Acontinue.md',
+  'opsx%3Askip.md',
+  'opsx%3Async-specs.md',
 ];
 
 const commandsDir = path.join(process.cwd(), '.cursor', 'commands');

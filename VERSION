@@ -1,1 +1,15 @@
-v0.2
+General Openspec Versioning
+============================
+
+OpenSpec CLI compatibility: >=1.3.1
+General-Openspec version:    0.1.0
+Skill schema version:        5.3
+Config generator version:   5.1
+
+Versioning Principles
+======================
+
+- OpenSpec CLI: follows official OpenSpec releases (semver)
+- General-Openspec: this project's own version (semver)
+- Skill schema: SKILL.md frontmatter schema version
+- Config generator: GENERATE-CONFIG.js version

@@ -7,7 +7,7 @@ tags:
   - openspec
   - layer:meta
 aliases:
-  - /opsx-explore
+  - /opsx:explore
 depends_on: []
 permissions: []
 risks: []

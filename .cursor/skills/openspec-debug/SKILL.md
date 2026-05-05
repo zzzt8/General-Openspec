@@ -7,7 +7,7 @@ tags:
   - openspec
   - layer:meta
 aliases:
-  - /opsx-debug
+  - /opsx:debug
 depends_on:
   - openspec-apply
   - openspec-verify

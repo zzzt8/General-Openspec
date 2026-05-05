@@ -7,7 +7,7 @@ tags:
   - openspec
   - layer:meta
 aliases:
-  - /opsx-onboard
+  - /opsx:onboard
 depends_on: []
 permissions: []
 risks: []
