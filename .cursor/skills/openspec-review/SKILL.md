@@ -148,7 +148,7 @@ fi
 # Design Review — <change-name>
 
 > 评审日期：<YYYY-MM-DD>
-> 评审人：AI（openspec-review v4.1）
+> 评审人：AI（openspec-review v5.3）
 > 基于：proposal.md、repo-analysis.md、design.md
 
 ## 评审结论
@@ -187,3 +187,162 @@ fi
 - **禁止**在 review 阶段修改代码（Mutation Gate 适用）
 - **禁止**在发现高风险缺口时仍给出"通过"结论
 - **禁止**内联 bash/grep/sed 脚本片段（使用 xplat 函数，详见 SHARED-LAYERS.md）
+
+---
+
+## Phase 6: Test Design（TDD 视角）
+
+> 在 tasks.md 生成之前，以 TDD 视角设计测试用例。每个 spec requirement 对应哪些测试场景？测试边界条件？回归范围？
+
+### 6.1 读取 artifacts
+
+读取以下 artifact 建立测试上下文：
+- `proposal.md` — 了解本次 change 的能力边界（ADDED/MODIFIED）
+- `specs/*.md` — 每个 capability 的 scenario 是天然测试用例来源
+- `design.md` — 了解技术方案中的关键路径和边界
+- `review.md` — 了解评审中发现的风险点（需要额外测试覆盖）
+
+### 6.2 识别测试范围
+
+```markdown
+## 测试范围 — <change-name>
+
+### 新增测试（本次 change 新增）
+
+| Spec 能力 | 对应测试用例 | 测试类型 | 优先级 |
+|-----------|-------------|---------|-------|
+| user-auth | TC-001: 成功登录 | 单元测试 | P0 |
+| user-auth | TC-002: 密码错误 | 单元测试 | P0 |
+
+### 回归测试（必须通过的已有测试）
+
+| 受影响能力 | 风险说明 | 回归范围 |
+|-----------|---------|---------|
+| existing-api | 新增参数后向兼容 | /api/v1/* |
+
+### 不测试范围
+
+| 范围 | 排除理由 |
+|------|---------|
+```
+
+### 6.3 设计测试用例
+
+对每个新增 spec requirement，逐一设计测试用例：
+
+```markdown
+## 测试用例设计
+
+### TC-xxx: [场景标题]
+
+| 字段 | 内容 |
+|------|------|
+| **来源** | specs/<capability>/spec.md — Scenario: [场景名] |
+| **测试类型** | 单元测试 / 集成测试 / E2E 测试 / 视觉测试 |
+| **测试文件** | `<layer>/__tests__/<module>.test.ts` |
+
+**输入：** `[测试输入数据]`
+**预期输出：** `[预期结果]`
+
+**边界条件：**
+- [ ] 正常路径
+- [ ] 边界值（最小/最大/空值）
+- [ ] 异常路径（错误输入/超时/服务不可用）
+```
+
+### 6.4 边界条件清单
+
+```markdown
+## 边界条件清单
+
+### 输入边界
+
+| 字段 | 最小值 | 最大值 | 空值处理 | 特殊值 |
+|------|------|------|--------|-------|
+| username | 1 char | 50 chars | 禁止 | Unicode / SQLi 注入 |
+
+### 并发边界
+
+| 场景 | 预期行为 | 测试方法 |
+|------|---------|---------|
+| 同一用户多端登录 | 允许 3 个会话 | Mock session store |
+```
+
+### 6.5 Mock / Fixture 策略
+
+```markdown
+## Mock / Fixture 策略
+
+| 依赖 | Mock 方式 | 工具 |
+|------|---------|------|
+| Database | In-memory SQLite | better-sqlite3 |
+| Redis | Mock redis client | ioredis-mock |
+| External API | HTTP mock | nock / msw |
+```
+
+### 6.6 测试执行顺序
+
+基于 design.md 中的 layer 依赖关系，确定测试执行顺序：
+
+```
+engine（无依赖）
+  -> backend（依赖 engine）
+    -> editor（依赖 backend + engine）
+      -> runtime（依赖 backend + engine）
+        -> ui-skin（依赖 backend）
+```
+
+**关键路径优先：**
+- 先覆盖 design.md 中标注为"高风险"的路径
+- 先覆盖 review.md 中"需要额外测试覆盖"的风险点
+
+### 6.7 生成 test-design.md artifact
+
+将完整的测试用例设计保存到 `openspec/changes/<name>/test-design.md`：
+
+```markdown
+# Test Design — <change-name>
+
+> 设计日期：<YYYY-MM-DD>
+> 基于：proposal.md、specs/*.md、design.md、review.md
+
+## 测试范围
+
+[测试范围表]
+
+## 测试用例设计
+
+[完整的逐能力测试用例]
+
+## 边界条件清单
+
+[边界条件表]
+
+## Mock / Fixture 策略
+
+[Mock 策略]
+
+## 测试执行顺序
+
+[执行顺序 + 关键路径]
+
+## 与 tasks.md 的映射关系
+
+| 测试用例 | 对应 Task | 执行时机 |
+|---------|---------|---------|
+| TC-001 | T1.1 实现登录 API | 与 T1.1 并行（推荐）或之后 |
+```
+
+## Test Design Guardrails
+
+- **强制**读取 review.md 后再开始设计（确保覆盖评审风险点）
+- **强制**每个 spec requirement 都有对应的测试用例
+- **强制**覆盖新增能力的正常路径 + 边界值 + 异常路径
+- **强制**明确回归测试范围（不得遗漏）
+- **强制**输出测试执行顺序（基于 layer 依赖）
+- **强制**每个测试用例包含测试文件路径（供 tasks.md 引用）
+- **强制**生成 test-design.md artifact
+- **禁止**跳过边界条件设计
+- **禁止**在测试设计阶段写测试代码（仅设计，代码在 implement 阶段写）
+- **禁止**遗漏 review.md 中标注的高风险路径
+

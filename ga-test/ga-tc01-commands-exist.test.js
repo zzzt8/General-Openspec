@@ -8,7 +8,6 @@ const EXPECTED_COMMANDS = [
   'opsx-explore.md',
   'opsx-propose.md',
   'opsx-review.md',
-  'opsx-test-design.md',
   'opsx-apply.md',
   'opsx-verify.md',
   'opsx-archive.md',

@@ -22,22 +22,18 @@
 ├── openspec-explore/          # explore    探索代码库
 ├── openspec-propose/          # propose    创建 change（一次性生成）
 ├── openspec-plan/             # meta       多 change 编排（非默认）
-├── openspec-skip/             # skip       跳过 task / 中止 change
-├── openspec-apply/            # apply      实现 tasks
-├── openspec-apply-change/     # apply      实现 change 任务（委托 openspec-apply）
-├── openspec-continue/         # apply      断点续传（委托 openspec-apply）
-├── openspec-continue-change/  # apply      创建下一 artifact（委托 openspec-continue）
-├── openspec-verify/           # verify     验证实现一致性
-├── openspec-verify-change/    # verify     验证 change（委托 openspec-verify）
-├── openspec-review/           # review     设计评审
-├── openspec-archive/          # archive    归档 change
-├── openspec-archive-change/   # archive    归档 change（委托 openspec-archive）
-├── openspec-debug/            # debug      调试 apply 阶段问题
 ├── openspec-skill/            # meta       Skill 系统维护（不默认暴露）
-└── openspec-test-design/      # verify     测试用例设计（TDD 视角）
+├── openspec-review/           # review     设计评审（含 Test Design）
+├── openspec-apply/            # apply      实现 tasks
+├── openspec-continue/         # apply      断点续传（委托 openspec-apply）
+├── openspec-skip/             # skip       跳过 task / 中止 change
+├── openspec-verify/           # verify     验证实现一致性
+├── openspec-archive/          # archive    归档 change
+├── openspec-debug/            # debug      调试 apply 阶段问题
+└── ga-*/                     # ga         GA 技能系统（5 个）
 ```
 
-共 **19 个 skill**，按 category 分为 13 类（见下表）。
+共 **15 个 skill**，按 category 分为 12 类（见下表）。
 
 > Category 数量由 GENERATE-INDEX.js 动态统计（每次运行 `node GENERATE-INDEX.js` 时更新）。
 
@@ -58,8 +54,6 @@
 | `archive` | 9 | `openspec-archive` |
 | `debug` | 10 | `openspec-debug` |
 | `review` | 11 | `openspec-review` |
-| `test-design` | 12 | `openspec-test-design` |
-| `other` | 13 | `openspec-apply-change`, `openspec-archive-change`, `openspec-continue-change`, `openspec-verify-change` |
 
 ## 常用 Skill 快速索引
 
@@ -88,7 +82,7 @@ node .cursor/skills/_shared/GENERATE-INDEX.js
 
 ```
 Generated: ...SKILL-INDEX.md
-Found 19 skills in 10 categories
+Found 15 skills in 12 categories
   onboard: openspec-onboard
   sync: openspec-sync, openspec-sync-specs
   explore: openspec-explore

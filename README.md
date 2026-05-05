@@ -7,13 +7,12 @@
 ```
 .
 ├── .cursor/                          # 隐藏文件夹（需显示隐藏项目）
-│   ├── commands/                      # 14 个 Slash 命令入口
+│   ├── commands/                      # 13 个 Slash 命令入口
 │   │   ├── opsx-onboard.md
 │   │   ├── opsx-sync.md
 │   │   ├── opsx-explore.md
 │   │   ├── opsx-propose.md
 │   │   ├── opsx-review.md
-│   │   ├── opsx-test-design.md
 │   │   ├── opsx-apply.md
 │   │   ├── opsx-verify.md
 │   │   ├── opsx-archive.md
@@ -22,26 +21,26 @@
 │   │   ├── opsx-continue.md
 │   │   ├── opsx-skip.md
 │   │   └── opsx-sync-specs.md
-│   └── skills/                        # 19 个 OpenSpec 技能
+│   └── skills/                        # 15 个 OpenSpec 技能 + 5 个 GA 技能
 │       ├── openspec-onboard/
 │       ├── openspec-sync/
+│       ├── openspec-sync-specs/
 │       ├── openspec-explore/
 │       ├── openspec-propose/
-│       ├── openspec-review/
+│       ├── openspec-review/           # 含 Test Design
 │       ├── openspec-apply/
+│       ├── openspec-continue/
+│       ├── openspec-skip/
 │       ├── openspec-verify/
 │       ├── openspec-archive/
 │       ├── openspec-debug/
 │       ├── openspec-plan/
-│       ├── openspec-skip/
-│       ├── openspec-continue/
 │       ├── openspec-skill/
-│       ├── openspec-test-design/
-│       ├── openspec-sync-specs/
-│       ├── openspec-apply-change/
-│       ├── openspec-archive-change/
-│       ├── openspec-continue-change/
-│       ├── openspec-verify-change/
+│       ├── ga-upgrade/
+│       ├── ga-export/
+│       ├── ga-test/
+│       ├── ga-report/
+│       ├── ga-skill/
 │       └── _shared/
 │
 └── openspec/

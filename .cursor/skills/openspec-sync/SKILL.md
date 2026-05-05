@@ -36,7 +36,7 @@ verify: []
 
 ## 执行流程
 
-### 1. 前置检查
+### 1. 前置检查 + xplat 初始化
 
 ```bash
 # Unix / Git Bash
@@ -61,14 +61,9 @@ fi
 
 ### 2. 同步 config.yaml
 
+> xplat 已在步骤 1 初始化，后续步骤直接使用函数。
+
 ```bash
-# Unix / Git Bash
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "$SCRIPT_DIR/../_shared/_xplat.sh"
-
-# Windows PowerShell
-# . "$PSScriptRoot\..\_shared\_xplat.ps1"
-
 # 保留已有 schema 和 package_manager（通过 xplat 读取）
 EXISTING_SCHEMA=$(get_schema_name "openspec/config.yaml")
 EXISTING_PKG_MGR=$(get_package_manager "openspec/config.yaml")
@@ -85,16 +80,9 @@ echo "[opsx-sync] config.yaml 已更新"
 openspec update
 ```
 
-### 4. Schema 一致性验证（xplat）
+### 4. Schema 一致性验证
 
 ```bash
-# Unix / Git Bash
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "$SCRIPT_DIR/../_shared/_xplat.sh"
-
-# Windows PowerShell
-# . "$PSScriptRoot\..\_shared\_xplat.ps1"
-
 if ! test_schema_exists "openspec/config.yaml"; then
   echo "[opsx-sync] Schema 验证失败。"
   exit 1

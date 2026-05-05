@@ -54,7 +54,7 @@ openspec new change "<meta-name>"
 ```
 
 生成：proposal.md、design.md、repo-analysis.md（只扫一遍）、change-index.md。
-（注：review.md 和 test-design.md 由各子 change 独立生成，不在 meta-change 中创建。）
+（注：review（含 test-design）由各子 change 独立生成，不在 meta-change 中创建。）
 
 > **CLI 语法验证（v5.1）：**
 > `openspec new change` 的 name 参数仅支持小写字母、数字、连字符（kebab-case），**不支持** `/` 分隔的嵌套语法。
@@ -104,9 +104,8 @@ openspec new change "<meta-name>-c2-repository-layer"
 ### 阶段 3: 子 change 的 review + test-design
 
 每个子 change 都需要依次执行：
-1. `/opsx-review` — 评审 design 决策
-2. `/opsx-test-design` — 设计测试用例
-3. `/opsx-apply` — 实现
+1. `/opsx-review` — 评审 design 决策（含 test-design）
+2. `/opsx-apply` — 实现
 
 父 meta change 的 repo-analysis.md 供子 change 复用。
 review.md 和 test-design.md 必须由每个子 change 独立完成，不得复用父 meta 的版本。
@@ -118,4 +117,4 @@ review.md 和 test-design.md 必须由每个子 change 独立完成，不得复�
 - **强制**检测并报错循环依赖
 - **禁止**用 mkdir 创建子 change 目录
 - **禁止**假设 CLI 支持 `/` 嵌套语法（必须使用 kebab-case）
-- **强制**子 change 必须独立完成各自的 review + test-design，不得复用父 meta 的版本
+- **强制**子 change 必须独立完成各自的 review（含 test-design），不得复用父 meta 的版本

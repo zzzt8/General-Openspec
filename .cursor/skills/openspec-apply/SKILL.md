@@ -42,16 +42,18 @@ verify:
 | 调用方式 | 模式 | 说明 |
 |---------|------|------|
 | `/opsx-apply <name>` | 执行模式 | 从第一个 todo task 开始 |
-| `/opsx-apply`（无参数） | 续传模式 | 自动检测断点，从上次中断处继续 |
-| `/opsx-apply --skip <task-id>` | 跳过模式 | 将指定 task 标记为跳过 |
-| `/opsx-apply --skip --change` | 中止模式 | 中止整个 change |
+| `/opsx-apply`（无参数） | 续传模式 | 委托 openspec-continue |
+| `/opsx-apply --skip <task-id>` | 跳过模式 | 委托 openspec-skip |
+| `/opsx-apply --skip --change` | 中止模式 | 委托 openspec-skip |
+
+**路由说明：** 无参数时自动分发到 `openspec-continue`；带 `--skip` 参数时自动分发到 `openspec-skip`。不内嵌续传/跳过/中止逻辑，由对应 skill 处理。
 
 ## Health Check（诊断性，非硬关卡）
 
-> **来自 design D5：** 健康检查失败输出为 WARNING，不阻断后续流程。Schema Preflight 仍为硬关卡。
+> 健康检查失败输出为 WARNING，不阻断后续流程。Schema Preflight 仍为硬关卡。
 
 ```powershell
-# 在 Schema Preflight 之前执行健康检查（诊断性，不阻断）
+# 在 Health Check 之后、Schema Preflight 之前执行健康检查（诊断性，不阻断）
 . "$PSScriptRoot\..\_shared\_xplat.ps1"
 
 $healthCheckScript = Join-Path $PSScriptRoot "..\_shared\health-check.ps1"
@@ -84,6 +86,8 @@ if (Test-Path $healthCheckScript) {
 
 ## Schema / Config 一致性 Preflight（硬关卡）
 
+> 详见 [../_shared/SCHEMA.md](../_shared/SCHEMA.md#schema-preflight-统一硬关卡)，apply 追加了 schema 名称诊断输出。
+
 ```bash
 # Unix / Git Bash
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -103,29 +107,19 @@ fi
 
 ## Artifact Precondition（硬关卡）
 
+> **v5.3 修复：** 不再手写文件列表，改为通过 CLI 动态检测 artifact 状态。
+> `openspec-propose` 生成 proposal + design + tasks，不含 repo-analysis / review / test-design。
+> `openspec-plan` 生成 repo-analysis + change-index，不含 review / test-design。
+> 两者都能通过 apply，因此硬关卡只验证 `tasks.md` 存在。
+
 ```bash
-# Unix / Git Bash
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "$SCRIPT_DIR/../_shared/_xplat.sh"
-
-# Windows PowerShell
-# . "$PSScriptRoot\..\_shared\_xplat.ps1"
-
-# 通过 xplat 检测文件是否存在
-if [ ! -f "openspec/changes/<name>/repo-analysis.md" ] || \
-   [ ! -f "openspec/changes/<name>/proposal.md" ] || \
-   [ ! -f "openspec/changes/<name>/design.md" ] || \
-   [ ! -f "openspec/changes/<name>/review.md" ] || \
-   [ ! -f "openspec/changes/<name>/test-design.md" ] || \
-   [ ! -f "openspec/changes/<name>/tasks.md" ]; then
-  echo "[opsx-apply] 缺少前置 artifact（<文件名>），请先完成 /opsx-review 和 /opsx-test-design"
+if [ ! -f "openspec/changes/<name>/tasks.md" ]; then
+  echo "[opsx-apply] 缺少前置 artifact（tasks.md），请先完成 /opsx-propose 或 /opsx-plan"
   exit 1
 fi
 ```
 
-**硬关卡：若任一 artifact 缺失：**
-- 停止 apply
-- 输出：`[opsx-apply] 缺少 artifact（<文件名>），请先完成 /opsx-review 和 /opsx-test-design`
+**注意：** review.md 和 test-design.md（如存在）作为参考读取，但不再是 apply 的硬关卡。
 
 ## 增量验证：基于 git diff
 
@@ -272,6 +266,7 @@ openspec validate --all --json
 
 **失败测试列表：**
 | 测试名称 | 失败特征 | 在 git diff 覆盖范围内？ |
+|---------|---------|----------------------|
 
 **归因分析（逐条，必须输出）：**
 | 测试 | 归因级别 | 证据 |
@@ -327,22 +322,23 @@ openspec validate --all --json
 ## Test Failure Attribution（强制声明）
 
 **失败测试列表：**
-|| 测试名称 | 维度1 | 维度2 | 维度3 | 总分 | 归因等级 |
+| 测试名称 | 维度1 | 维度2 | 维度3 | 总分 | 归因等级 |
+|---------|-------|-------|-------|------|---------|
 
 **归因分析（逐条，必须输出）：**
-|| 测试 | 归因级别 | 证据 | 维度得分 |
-||------|---------|------|---------|
-|| [TC-xxx] | related / unrelated_proven / flaky_proven / undetermined | git diff / 调用链 / 失败特征 | X/X/X |
+| 测试 | 归因级别 | 证据 | 维度得分 |
+|------|---------|------|---------|
+| [TC-xxx] | related / unrelated_proven / flaky_proven / undetermined | git diff / 调用链 / 失败特征 | X/X/X |
 
 **归因判定标准（量化）：**
 
-|| 级别 | 总分 | 后续动作 |
-||------|------|---------|
-|| `related` | ≥ 2.0 | 硬关卡：不得标记完成，必须修复 |
-|| `undetermined`（meta 层） | 1.0 ~ 1.5 | **降级：warning + 要求记录，继续执行** |
-|| `undetermined`（非 meta 层） | 1.0 ~ 1.5 | **硬关卡：禁止给出"可以完成"结论** |
-|| `unrelated_proven` | ≤ 0.5 | 记录归因，继续 |
-|| `flaky_proven` | — | 记录归因，继续 |
+| 级别 | 总分 | 后续动作 |
+|------|------|---------|
+| `related` | ≥ 2.0 | 硬关卡：不得标记完成，必须修复 |
+| `undetermined`（meta 层） | 1.0 ~ 1.5 | **降级：warning + 要求记录，继续执行** |
+| `undetermined`（非 meta 层） | 1.0 ~ 1.5 | **硬关卡：禁止给出"可以完成"结论** |
+| `unrelated_proven` | ≤ 0.5 | 记录归因，继续 |
+| `flaky_proven` | — | 记录归因，继续 |
 
 **如果存在 `undetermined`（非 meta 层）或 `related`：**
 - 输出：`[opsx-apply] Test Failure Attribution 阻断`
@@ -366,161 +362,6 @@ openspec validate --all --json
 └─ 是否涉及多个 layer？ → 按 layer 拆分
 ```
 
-### 模式 B：跳过模式（`--skip <task-id>`）
-
-#### 1. 确定 change 和 task
-
-```bash
-openspec status --change "<name>" --json
-```
-
-#### 2. 确认跳过原因
-
-```
-## 跳过 Task 确认 — T3
-
-当前 change：<name>
-Task：T3: [任务描述]
-
-请选择跳过原因：
-1. [ ] 需求变更，不再需要
-2. [ ] 已由其他 task 覆盖
-3. [ ] 技术不可行，暂不实现
-4. [ ] 其他原因（请说明）
-
-跳过后：
-- 该 task 标记为 - [S]（跳过）
-- 不影响其他 tasks
-- 记录跳过原因到 tasks.md
-
-输入原因编号，或直接输入 "skip" 确认跳过。
-```
-
-#### 3. 更新 tasks.md
-
-```bash
-# 使用 awk 跨平台替换 checkbox 状态（sed -i 在原生 PowerShell 中不可用）
-awk '
-/^- \[ \] \(T3:.*\)/ {
-    sub(/^- \[ \] \(T3:/, "- [S] (T3:")
-    $0 = $0 "  # 跳过原因：xxx"
-}
-{ print }
-' "openspec/changes/<name>/tasks.md" > "openspec/changes/<name>/tasks.md.tmp" && \
-  mv "openspec/changes/<name>/tasks.md.tmp" "openspec/changes/<name>/tasks.md"
-```
-
-#### 4. 记录跳过原因
-
-```markdown
-## Task 跳过记录
-
-|| Task | 原因 | 日期 |
-||------|------|------|
-|| T3 | 需求变更，不再需要 | 2026-04-19 |
-```
-
-### 模式 C：中止模式（`--skip --change`）
-
-#### 1. 确认中止
-
-```
-## 中止 Change 确认 — <name>
-
-警告：中止 change 将：
-- 停止所有后续 tasks
-- 将 change 标记为 abandoned
-- 不删除任何已创建的 artifacts
-
-当前进度：N/N tasks 完成
-
-请确认：
-1. [ ] 已 commit 所有需要保留的代码
-2. [ ] 了解中止后无法直接恢复
-3. [ ] 确认中止此 change
-
-输入 "abandon" 确认中止，或 "cancel" 取消。
-```
-
-#### 2. 更新 proposal.md
-
-```bash
-# 在 proposal.md frontmatter 的 status 字段后追加 abandoned 状态
-# 使用 awk 跨平台实现（sed -i 在原生 PowerShell 中不可用）
-awk '
-/^status:/ && !added {
-    print $0
-    print "abandoned_reason: \"xxx\""
-    print "abandoned_date: \"2026-04-19\""
-    added = 1
-    next
-}
-{ print }
-' "openspec/changes/<name>/proposal.md" > "openspec/changes/<name>/proposal.md.tmp" && \
-  mv "openspec/changes/<name>/proposal.md.tmp" "openspec/changes/<name>/proposal.md"
-```
-
-### 模式 D：续传模式（无参数，自动检测）
-
-#### 1. 检测 active changes
-
-```bash
-openspec list --json
-```
-
-#### 2. 找到断点
-
-```javascript
-function findResumePoint(tasks) {
-  for (const task of tasks) {
-    if (task.status === 'todo') {
-      const blockers = checkDependencies(task, tasks);
-      if (blockers.length === 0) {
-        return task;
-      }
-    }
-  }
-  return null;
-}
-```
-
-#### 3. 显示续传摘要
-
-```
-## Continue 摘要 — <change-name>
-
-当前进度：N/N tasks 完成（N 个跳过）
-
-上次中断位置：T3
-上次中断原因：[从上下文推断或询问用户]
-
-断点任务：T3: [任务描述]
-  Layer: engine
-  Verify: unit-tests
-  Dependencies: none
-
-从 T3 继续执行...
-
-继续前请确认：
-- [ ] 上次中断的上下文已清晰
-- [ ] 无需要重新评估的任务
-- [ ] 代码状态正常（无残留修改）
-
-输入 "continue" 开始续传，或输入 task-id 跳转到其他 task。
-```
-
-#### 4. 执行续传
-
-复用执行模式的逻辑，从断点 task 继续：
-```
-1. 执行当前 task（T3）
-2. Git commit
-3. 增量验证
-4. 更新 checkbox
-5. 继续下一个 task（T4）
-6. ... 直到所有 tasks 完成或遇到 blocker
-```
-
 ## Guardrails
 
 - **强制**每个 task 完成后执行 git commit（git 可用时）
@@ -533,14 +374,13 @@ function findResumePoint(tasks) {
 - **强制**测试失败时执行 Test Failure Attribution 并输出归因分析
 - **强制**存在 `related` 或 `undetermined` 时必须转 /opsx-debug
 - **强制**调用 CLI 前必须执行 Schema Preflight（通过 xplat 函数，详见 SHARED-LAYERS.md）
-- **强制**续传模式下有多于 1 个 active change 时必须列出供用户选择
-- **强制**跳过 task 必须记录原因（写入 tasks.md 注释）
-- **强制**中止 change 前必须确认用户已 commit 保留代码
 - **禁止**在 apply 阶段探索代码库
 - **禁止**跳过增量验证
 - **禁止**忽略 layer 优先级
 - **禁止**在 CLI 输出异常时放弃，应使用 fallback
 - **禁止**忽略 blocked dependencies
 - **禁止**未完成归因声明就自行判断"与本次 change 无关"
-- **禁止**续传模式下跳过任何 checkbox 状态为 todo 的 task
 - **禁止**内联 bash/grep/sed 脚本片段（使用 xplat 函数，详见 SHARED-LAYERS.md）
+- **委托**跳过 task → `/opsx-skip`
+- **委托**中止 change → `/opsx-skip`
+- **委托**续传 → `/opsx-continue`

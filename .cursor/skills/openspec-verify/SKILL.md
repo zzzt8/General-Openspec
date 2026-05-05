@@ -30,6 +30,8 @@ verify:
 
 ### 1. Schema Preflight（xplat）
 
+> 详见 [../_shared/SCHEMA.md](../_shared/SCHEMA.md#schema-preflight-统一硬关卡)。
+
 ```bash
 # Unix / Git Bash
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
