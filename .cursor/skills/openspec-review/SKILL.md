@@ -7,7 +7,7 @@ tags:
   - openspec
   - layer:meta
 aliases:
-  - /opsx:review
+  - /opsx-review
 depends_on:
   - openspec-propose
 permissions: []
@@ -34,12 +34,12 @@ verify: []
 if [ ! -f "openspec/changes/<name>/repo-analysis.md" ] || \
    [ ! -f "openspec/changes/<name>/proposal.md" ] || \
    [ ! -f "openspec/changes/<name>/design.md" ]; then
-  echo "[opsx-review] 缺少前置 artifact（<文件名>），请先完成 /opsx:propose"
+  echo "[opsx-review] 缺少前置 artifact（<文件名>），请先完成 /opsx-propose"
   exit 1
 fi
 ```
 
-缺失时输出：`[opsx-review] 缺少前置 artifact（<文件名>），请先完成 /opsx:propose`
+缺失时输出：`[opsx-review] 缺少前置 artifact（<文件名>），请先完成 /opsx-propose`
 
 ## 执行流程
 
@@ -131,12 +131,12 @@ fi
 - D2 章节「Decisions」段落，补充 1 段（约 200 字）
 - 新增「风险」小节，补充 [Risk] -> Mitigation 条目
 
-修订后请重新运行 /opsx:review。
+修订后请重新运行 /opsx-review。
 ```
 
 #### 5.2 修订后的 review 流程
 
-修订 design.md 后，重新执行 `/opsx:review`：
+修订 design.md 后，重新执行 `/opsx-review`：
 - 仅重新核验修订涉及的决策（D2）
 - 其他已通过的决策保持结论
 

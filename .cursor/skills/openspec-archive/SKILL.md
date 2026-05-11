@@ -7,7 +7,7 @@ tags:
   - openspec
   - layer:meta
 aliases:
-  - /opsx:archive
+  - /opsx-archive
 depends_on:
   - openspec-verify
 permissions: []
@@ -161,7 +161,7 @@ openspec archive <name> --yes
 specs 同步状态：✓ 已更新
 
 下一步：
-- 运行 /opsx:propose 开始新 change
+- 运行 /opsx-propose 开始新 change
 ```
 
 ### 6.1 查看已归档 change 的内容

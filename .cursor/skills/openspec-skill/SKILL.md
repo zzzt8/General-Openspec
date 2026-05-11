@@ -7,7 +7,7 @@ tags:
   - openspec
   - layer:meta
 aliases:
-  - /opsx:skill
+  - /opsx-skill
 depends_on: []
 permissions: []
 risks: []
@@ -30,17 +30,17 @@ verify: []
 ## 使用方式
 
 ```bash
-/opsx:skill list                    # 列出所有 skills
-/opsx:skill list --category apply   # 按 category 过滤
-/opsx:skill list --tag openspec     # 按 tag 搜索
+/opsx-skill list                    # 列出所有 skills
+/opsx-skill list --category apply   # 按 category 过滤
+/opsx-skill list --tag openspec     # 按 tag 搜索
 
-/opsx:skill deps <name>             # 显示依赖关系
-/opsx:skill deps --all              # 显示所有依赖
+/opsx-skill deps <name>             # 显示依赖关系
+/opsx-skill deps --all              # 显示所有依赖
 
-/opsx:skill validate                # 验证所有 skills 格式
-/opsx:skill validate --fix          # 自动修复可修复的问题
+/opsx-skill validate                # 验证所有 skills 格式
+/opsx-skill validate --fix          # 自动修复可修复的问题
 
-/opsx:skill index                   # 重新生成索引
+/opsx-skill index                   # 重新生成索引
 ```
 
 ## 子命令详解
@@ -179,6 +179,6 @@ node .cursor/skills/_shared/GENERATE-INDEX.js
 
 ## Guardrails
 
-- **禁止**在日常开发中调用 `/opsx:skill`（不默认暴露）
+- **禁止**在日常开发中调用 `/opsx-skill`（不默认暴露）
 - **强制**validate 检查循环依赖
 - **强制**list 按 category 排序输出

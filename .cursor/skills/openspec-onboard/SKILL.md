@@ -7,7 +7,7 @@ tags:
   - openspec
   - layer:meta
 aliases:
-  - /opsx:onboard
+  - /opsx-onboard
 depends_on: []
 permissions: []
 risks: []
@@ -75,7 +75,7 @@ If nothing found, ask what the user wants to build.
 Briefly demonstrate explore mode — investigate the relevant code for 1-2 minutes. Show what you find.
 
 ```
-Explore mode (`/opsx:explore`) is for thinking through problems before committing to a direction. You can use it anytime.
+Explore mode (`/opsx-explore`) is for thinking through problems before committing to a direction. You can use it anytime.
 ```
 
 Pause for acknowledgment.
@@ -144,14 +144,14 @@ This works for any size change.
 
 | Command              | What it does                    |
 |----------------------|--------------------------------|
-| `/opsx:propose`    | Create change + all artifacts  |
-| `/opsx:explore`    | Think through problems         |
-| `/opsx:apply`      | Implement tasks                |
+| `/opsx-propose`    | Create change + all artifacts  |
+| `/opsx-explore`    | Think through problems         |
+| `/opsx-apply`      | Implement tasks                |
 | `/opsx:archive`    | Archive when done              |
-| `/opsx:continue`   | Resume existing change         |
-| `/opsx:verify`     | Verify implementation          |
+| `/opsx-continue`   | Resume existing change         |
+| `/opsx-verify`     | Verify implementation          |
 
-Try `/opsx:propose` on something you want to build!
+Try `/opsx-propose` on something you want to build!
 ```
 
 ## Graceful Exit
@@ -159,7 +159,7 @@ Try `/opsx:propose` on something you want to build!
 If user wants to stop mid-way:
 ```
 Your change is saved at `openspec/changes/<name>/`.
-Use `/opsx:continue <name>` to pick up later.
+Use `/opsx-continue <name>` to pick up later.
 ```
 
 If user just wants command reference, show the table above and exit.

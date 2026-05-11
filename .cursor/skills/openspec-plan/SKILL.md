@@ -7,7 +7,7 @@ tags:
   - openspec
   - layer:meta
 aliases:
-  - /opsx:plan
+  - /opsx-plan
 depends_on:
   - openspec-explore
 permissions: []
@@ -25,7 +25,7 @@ verify: []
 
 ## 使用门槛
 
-满足以下任一条件，建议使用 `/opsx:plan`：
+满足以下任一条件，建议使用 `/opsx-plan`：
 
 | 条件 | 说明 |
 |------|------|
@@ -35,14 +35,14 @@ verify: []
 | 需要批量 apply | 多个 change 需要统一执行 |
 | 专家规划文档已存在 | 已有结构化分析，需拆解派生子 change |
 
-不满足以上条件，直接走 `/opsx:propose`。
+不满足以上条件，直接走 `/opsx-propose`。
 
 ## 使用方式
 
 ```bash
-/opsx:plan <path-to-expert-doc>     # 完整流程
-/opsx:plan --derive <meta-change>    # 仅派生
-/opsx:plan <doc> --no-confirm        # 跳过人工确认
+/opsx-plan <path-to-expert-doc>     # 完整流程
+/opsx-plan --derive <meta-change>    # 仅派生
+/opsx-plan <doc> --no-confirm        # 跳过人工确认
 ```
 
 ## 执行流程
@@ -104,8 +104,8 @@ openspec new change "<meta-name>-c2-repository-layer"
 ### 阶段 3: 子 change 的 review + test-design
 
 每个子 change 都需要依次执行：
-1. `/opsx:review` — 评审 design 决策（含 test-design）
-2. `/opsx:apply` — 实现
+1. `/opsx-review` — 评审 design 决策（含 test-design）
+2. `/opsx-apply` — 实现
 
 父 meta change 的 repo-analysis.md 供子 change 复用。
 review.md 和 test-design.md 必须由每个子 change 独立完成，不得复用父 meta 的版本。

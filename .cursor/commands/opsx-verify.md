@@ -1,4 +1,4 @@
-# /opsx:verify
+# /opsx-verify
 
 Verify OpenSpec change implementation consistency — Full verification + coherence-lite checklist.
 
@@ -6,10 +6,11 @@ Verify OpenSpec change implementation consistency — Full verification + cohere
 
 1. Read `.cursor/skills/openspec-verify/SKILL.md`.
 2. Follow that skill as the source of truth.
-3. Do not implement from this stub alone.
+3. Do not execute from this stub alone.
+4. If the skill file cannot be read, stop and report the missing skill.
 
 ## Syntax
 
-- `/opsx:verify <change-name>` — verify the specified change
+- `/opsx-verify <change-name>` — verify the specified change
 
 See `.cursor/skills/openspec-verify/SKILL.md` for full implementation.

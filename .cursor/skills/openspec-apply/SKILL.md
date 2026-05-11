@@ -7,7 +7,7 @@ tags:
   - openspec
   - layer:meta
 aliases:
-  - /opsx:apply
+  - /opsx-apply
 depends_on:
   - openspec-propose
   - openspec-plan
@@ -44,9 +44,9 @@ Profile gates:
 
 | Call Style | Mode | Behavior |
 |------------|------|----------|
-| `/opsx:apply <name> --from <id>` | Execute | Run specific task |
-| `/opsx:apply <name>` | Execute | Start from first incomplete |
-| `/opsx:apply` | Execute | Find active change via CLI |
+| `/opsx-apply <name> --from <id>` | Execute | Run specific task |
+| `/opsx-apply <name>` | Execute | Start from first incomplete |
+| `/opsx-apply` | Execute | Find active change via CLI |
 
 ## State Truth Source
 
@@ -78,7 +78,7 @@ For each task:
    - Otherwise: report changes, let user decide
 6. **Incremental verify**: see [_steps/VERIFY.md](_steps/VERIFY.md)
 7. **Update checkbox**: `- [ ]` -> `- [x]`
-8. **On failure**: go to `/opsx:debug`
+8. **On failure**: go to `/opsx-debug`
 
 ## Layer Priority
 
@@ -112,7 +112,7 @@ For `core-light` profile: undetermined (meta layer) downgrades to warning + reco
 - **强制**按 layer 优先级排序执行
 - **强制**apply 开始前验证 tasks.md 存在（硬关卡）
 - **强制**测试失败时执行 Test Failure Attribution（当 `GATE_TEST_ATTRIBUTION=true`）
-- **强制**失败时转到 `/opsx:debug`
+- **强制**失败时转到 `/opsx-debug`
 - **强制**增量验证基于实际 git diff，不依赖 Agent 预估
 - **强制**git 操作使用 baseline tracking，不依赖 HEAD~N
 - **禁止**在 apply 阶段探索代码库
@@ -120,5 +120,5 @@ For `core-light` profile: undetermined (meta layer) downgrades to warning + reco
 - **禁止**忽略 layer 优先级
 - **禁止**忽略 blocked dependencies
 - **禁止**内联 bash/grep/sed 脚本片段（使用 xplat 函数）
-- **委托**跳过 task → `/opsx:skip`
-- **委托**中止 change → `/opsx:skip`
+- **委托**跳过 task → `/opsx-skip`
+- **委托**中止 change → `/opsx-skip`

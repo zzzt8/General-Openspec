@@ -154,8 +154,8 @@ invoke_verify "engine" "test" "openspec/config.yaml"
 |------|------|---------|---------------------|
 | 能用 git diff 证明测试不在覆盖范围 | `unrelated_proven` | 记录归因，继续 verify | 记录归因，继续 verify |
 | 已知 flaky，失败特征与历史一致 | `flaky_proven` | 记录归因，继续 verify | 记录归因，继续 verify |
-| 测试在 git diff 覆盖范围内 | `related` | 硬关卡：不得标记完成，转 /opsx:apply 修复 | 硬关卡：不得标记完成，转 /opsx:apply 修复 |
-| 无法明确证明 | `undetermined` | **降级：warning + 记录，继续 verify** | **硬关卡：禁止给出结论，转 /opsx:debug** |
+| 测试在 git diff 覆盖范围内 | `related` | 硬关卡：不得标记完成，转 /opsx-apply 修复 | 硬关卡：不得标记完成，转 /opsx-apply 修复 |
+| 无法明确证明 | `undetermined` | **降级：warning + 记录，继续 verify** | **硬关卡：禁止给出结论，转 /opsx-debug** |
 
 #### 5.3 记录归因
 
@@ -174,7 +174,7 @@ invoke_verify "engine" "test" "openspec/config.yaml"
 
 如果存在 `related` 或 `undetermined`（非 meta 层）：
 - 输出：`[opsx-verify] Test Failure Attribution 阻断`
-- **强制**进入 /opsx:debug 并附上归因分析
+- **强制**进入 /opsx-debug 并附上归因分析
 - **禁止**给出"可以 archive"或"不可 archive"的二元结论（对 `undetermined`）
 
 如果存在 `undetermined`（meta 层）：
@@ -210,7 +210,7 @@ invoke_verify "engine" "test" "openspec/config.yaml"
 - **强制**coherence-lite 执行 Traceability Map 核对
 - **强制**undetermined 状态必须经过三步闭环处理（详见"undetermined 处理"章节）
 - **强制**非 meta 层 undetermined 必须阻断，禁止给出 archive 结论
-- **强制**coherence-lite 失败时返回 `/opsx:apply` 修复
+- **强制**coherence-lite 失败时返回 `/opsx-apply` 修复
 - **强制**profile-aware：core-light 下 verify 是辅助检查，不阻断 archive
 - **禁止**跳过 verify 直接 archive
 - **禁止**在 verify 阶段修复代码，只负责发现问题

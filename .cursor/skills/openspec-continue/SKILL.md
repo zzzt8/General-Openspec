@@ -58,7 +58,7 @@ openspec list --json
   Verify: unit-tests
   Dependencies: none
 
-下一步：调用 /opsx:apply <change-name> --from T3
+下一步：调用 /opsx-apply <change-name> --from T3
 ```
 
 ### 5. 输出续传指令
@@ -66,7 +66,7 @@ openspec list --json
 不再委托 apply 执行，而是直接输出调用指令供 Agent 执行：
 
 ```
-/opsx:apply <change-name> --from <task-id>
+/opsx-apply <change-name> --from <task-id>
 ```
 
 ## Guardrails

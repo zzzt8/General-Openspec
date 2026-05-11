@@ -54,7 +54,7 @@ fi
 
 # 2. 检查 openspec 目录
 if [ ! -d "openspec" ]; then
-  echo "[opsx-sync] OpenSpec 未初始化。请先运行 /opsx:onboard。"
+  echo "[opsx-sync] OpenSpec 未初始化。请先运行 /opsx-onboard。"
   exit 1
 fi
 ```
@@ -104,12 +104,12 @@ echo "[opsx-sync] Schema 验证通过"
 
 下一步：
 - 编辑 openspec/config.yaml 调整 layers 和 verify 命令
-- 运行 /opsx:explore 开始探索
+- 运行 /opsx-explore 开始探索
 ```
 
 ## Guardrails
 
-- **禁止**在未初始化的项目中运行（先运行 /opsx:onboard）
+- **禁止**在未初始化的项目中运行（先运行 /opsx-onboard）
 - **强制**保留用户已有的 schema 和 package_manager 配置
 - **强制**同步后验证 Schema 一致性（通过 xplat 函数，详见 SHARED-LAYERS.md）
 - **强制**config.yaml 同步使用 GENERATE-CONFIG.js 而非 heredoc（详见 SHARED-LAYERS.md）
