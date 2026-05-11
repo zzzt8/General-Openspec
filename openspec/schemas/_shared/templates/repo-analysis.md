@@ -1,20 +1,20 @@
 ---
 name: repo-analysis-template
-description: Repository Analysis 文档模板。结构分析与影响映射。
+description: Repository Analysis document template. Structure analysis and impact mapping.
 schema: _shared
 ---
 
-## 影响层（Impact Map）
+## Impact Map
 
-| 影响层 | 涉及模块 | 影响原因 |
-|--------|----------|----------|
+| Layer | Modules | Reason |
+|-------|---------|--------|
 | engine | ... | ... |
+| backend | ... | ... |
 | editor | ... | ... |
 | runtime | ... | ... |
-| backend | ... | ... |
 | ui-skin | ... | ... |
 
-## 相关目录
+## Relevant Directories
 
 ```
 affected/
@@ -25,35 +25,32 @@ affected/
 └── packages/ui/src/
 ```
 
-## 关键模块
+## Key Modules
 
-### [模块名称]
+### [Module Name]
 
-- **位置**: `...`
-- **职责**: ...
-- **数据流**: ...
-- **调用链**: ...
+- **Location**: `...`
+- **Responsibility**: ...
+- **Data flow**: ...
+- **Call chain**: ...
 
-## 复用点
+## Reuse Points
 
-<!-- 可复用的现有代码 -->
-- 现有 ... 模块可复用
-- shared-types 中定义的标准接口
+- Existing ... module can be reused
+- shared-types standard interfaces
 
-## 现有问题
+## Existing Issues
 
 1. ...
 2. ...
 
 ## Impact Summary
 
-本次变更影响：
+- **New dependencies**: ...
+- **Breaking changes**: ...
+- **Backward compatible**: ...
 
-- **新增依赖**: ...
-- **破坏性变更**: ...
-- **向后兼容**: ...
-
-## 数据流变化
+## Data Flow Changes
 
 ```
 [Before]

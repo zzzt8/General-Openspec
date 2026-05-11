@@ -1,22 +1,17 @@
 ---
 name: openspec-explore
 description: Enter explore mode - a thinking partner for exploring ideas, investigating problems, and clarifying requirements. Use when the user wants to think through something before or during a change.
-version: "5.3"
-category: explore
-tags:
-  - openspec
-  - layer:meta
-aliases:
-  - /opsx:explore
-depends_on: []
-permissions: []
-risks: []
-verify: []
+license: MIT
+compatibility: Requires openspec CLI.
+metadata:
+  author: openspec
+  version: "1.0"
+  generatedBy: "1.3.1"
 ---
 
 Enter explore mode. Think deeply. Visualize freely. Follow the conversation wherever it goes.
 
-**IMPORTANT: Explore mode is for thinking, not implementing.** You may read files, search code, and investigate the codebase, but you must NEVER write code or implement features. If the user asks you to implement something, remind them to exit explore mode first and create a change proposal. You MAY create OpenSpec artifacts (proposals, designs, specs) if the user asks - that is capturing thinking, not implementing.
+**IMPORTANT: Explore mode is for thinking, not implementing.** You may read files, search code, and investigate the codebase, but you must NEVER write code or implement features. If the user asks you to implement something, remind them to exit explore mode first and create a change proposal. You MAY create OpenSpec artifacts (proposals, designs, specs) if the user asks—that's capturing thinking, not implementing.
 
 **This is a stance, not a workflow.** There are no fixed steps, no required sequence, no mandatory outputs. You're a thinking partner helping the user explore.
 
@@ -96,8 +91,6 @@ This tells you:
 - Their names, schemas, and status
 - What the user might be working on
 
-If the user mentioned a specific change name, read its artifacts for context.
-
 ### When no change exists
 
 Think freely. When insights crystallize, you might offer:
@@ -111,9 +104,8 @@ If the user mentions a change or you detect one is relevant:
 
 1. **Read existing artifacts for context**
    - `openspec/changes/<name>/proposal.md`
-   - `openspec/changes/<name>/design.md`
    - `openspec/changes/<name>/tasks.md`
-   - etc.
+   - (specs, design, or other artifacts if they exist)
 
 2. **Reference them naturally in conversation**
    - "Your design mentions using Redis, but we just realized SQLite fits better..."
@@ -121,18 +113,18 @@ If the user mentions a change or you detect one is relevant:
 
 3. **Offer to capture when decisions are made**
 
-   | Insight Type               | Where to Capture               |
-   |----------------------------|--------------------------------|
-   | New requirement discovered  | `specs/<capability>/spec.md`   |
-   | Requirement changed         | `specs/<capability>/spec.md`   |
-   | Design decision made        | `design.md`                   |
-   | Scope changed              | `proposal.md`                 |
-   | New work identified        | `tasks.md`                    |
-   | Assumption invalidated     | Relevant artifact              |
+    | Insight Type               | Where to Capture               |
+    |----------------------------|--------------------------------|
+    | New requirement discovered | `openspec/specs/<capability>/spec.md` |
+    | Requirement changed        | `openspec/specs/<capability>/spec.md` |
+    | Design decision made       | `proposal.md` or `tasks.md`   |
+    | Scope changed              | `proposal.md`                |
+    | New work identified        | `tasks.md`                   |
+    | Assumption invalidated     | Relevant artifact              |
 
    Example offers:
-   - "That's a design decision. Capture it in design.md?"
-   - "This is a new requirement. Add it to specs?"
+   - "That's a design decision. Capture it in the proposal or tasks?"
+   - "This is a new requirement. Add it to the proposal scope?"
    - "This changes scope. Update the proposal?"
 
 4. **The user decides** - Offer and move on. Don't pressure. Don't auto-capture.
@@ -159,7 +151,7 @@ User: I'm thinking about adding real-time collaboration
 You: Real-time collab is a big space. Let me think about this...
 
       COLLABORATION SPECTRUM
-      ================================
+      ════════════════════════════════════════════
 
       Awareness          Coordination         Sync
           │                   │                 │
@@ -181,7 +173,27 @@ User: The auth system is a mess
 
 You: [reads codebase]
 
-     [CURRENT AUTH FLOW diagram]
+     ┌─────────────────────────────────────────────┐
+     │              CURRENT AUTH FLOW              │
+     └─────────────────────────────────────────────┘
+                        │
+          ┌─────────────┼─────────────┐
+          ▼             ▼             ▼
+     ┌─────────┐  ┌─────────┐  ┌─────────┐
+     │ Google  │  │  GitHub │  │  Email  │
+     │  OAuth  │  │  OAuth  │  │  Magic  │
+     └────┬────┘  └────┬────┘  └────┬────┘
+          │             │             │
+          └─────────────┼─────────────┘
+                        ▼
+                  ┌───────────┐
+                  │  Session  │
+                  └─────┬─────┘
+                        │
+                        ▼
+                  ┌───────────┐
+                  │   Perms   │
+                  └───────────┘
 
      I see three tangles. Which one's burning?
 ```
@@ -213,7 +225,19 @@ User: A CLI tool that tracks local dev environments
 
 You: That changes everything.
 
-     [CLI TOOL DATA STORAGE comparison table]
+     ┌─────────────────────────────────────────────────┐
+     │          CLI TOOL DATA STORAGE                  │
+     └─────────────────────────────────────────────────┘
+
+     Key constraints:
+     • No daemon running
+     • Must work offline
+     • Single user
+
+                  SQLite          Postgres
+     Deployment   embedded ✓      needs server ✗
+     Offline      yes ✓           no ✗
+     Single file  yes ✓           no ✗
 
      SQLite. Not even close.
 
@@ -227,7 +251,7 @@ You: That changes everything.
 There's no required ending. Discovery might:
 
 - **Flow into a proposal**: "Ready to start? I can create a change proposal."
-- **Result in artifact updates**: "Updated design.md with these decisions"
+- **Result in artifact updates**: "Updated tasks.md with these decisions"
 - **Just provide clarity**: User has what they need, moves on
 - **Continue later**: "We can pick this up anytime"
 

@@ -1,33 +1,62 @@
 ---
 name: tasks-template
-description: Tasks 文档模板。实现检查清单，驱动 apply 阶段。
+description: Tasks document template. Implementation checklist with quality gates.
 schema: _shared
 ---
 
-## Task List
+## BCF Implementation
 
-<!-- opsx-meta
-id: T1
-layer: engine
-verify: unit-tests
-dependencies:
-  - type: task
-    refs: []
--->
-- [ ] T1: [任务描述]
+<!-- Corresponding to each row in proposal BCF table. Required for medium/high changes. -->
 
-<!-- opsx-meta
-id: T2
-layer: backend
-verify: api-tests
-dependencies:
-  - type: task
-    refs: [T1]
--->
-- [ ] T2: [任务描述]
+- [ ] BCF-1: <!-- brief description of verification process and results -->
 
----
+## Layer Implementation
 
-## Manual Acceptance Checklist
+<!-- In priority order: engine > backend > editor > runtime > ui-skin > meta -->
 
-- [ ] [验收项]
+### engine
+
+<!-- Core business logic, state management, data layer -->
+
+- [ ] T1: [Task description]
+
+### backend
+
+<!-- API endpoints, data models, database changes -->
+
+- [ ] T2: [Task description]
+
+### editor
+
+<!-- Editor-related logic -->
+
+- [ ] T3: [Task description]
+
+### runtime
+
+<!-- Main application runtime logic -->
+
+- [ ] T4: [Task description]
+
+### ui-skin
+
+<!-- UI components, styles, interactions -->
+
+- [ ] T5: All buttons/links/form controls have real handlers (no empty onClick)
+
+## Quality Gates
+
+<!-- Required for all change classes -->
+
+- [ ] Code passes typecheck
+- [ ] No placeholder components (no `onClick={() => {}}` or empty handlers)
+- [ ] UI correctly extracts and uses key fields from API response
+- [ ] All BCF verified in real environment (connected backend + database)
+
+## Delivery Confirmation
+
+<!-- User confirms after all tasks complete -->
+
+- [ ] All BCF verified in real environment
+- [ ] E2E smoke tests cover all BCF (if E2E tests exist)
+- [ ] User confirms delivery and agrees to commit

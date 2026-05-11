@@ -1,38 +1,50 @@
 ---
 name: proposal-template
-description: Proposal 文档模板。捕获变更动机和影响范围。
+description: Proposal document template. Captures change motivation and impact scope with BCF.
 schema: _shared
 ---
 
-## change_class
-
-<!-- change_class: low | high -->
-<!-- reason: <推断理由> -->
-
 ## Why
 
-<!-- 描述本次变更的原因。解决了什么问题？为什么是现在？ -->
+<!-- Describe the reason for this change. What problem does it solve? Why now? -->
 
 ## What Changes
 
-<!-- 列出具体变更内容。新增 / 修改 / 删除的能力。破坏性变更用 **BREAKING** 标注。 -->
+<!-- List specific changes. New / Modified / Removed capabilities. Use **BREAKING** for breaking changes. -->
 
 ## Capabilities
 
 ### New Capabilities
 
-<!-- 引入的新能力。格式：`<name>`: <描述>。每个对应 specs/<name>/spec.md -->
-- `<name>`: <简要描述>
+<!-- New capabilities introduced. Format: `<name>`: <description>. Each corresponds to specs/<name>/spec.md -->
+- `<name>`: <description>
 
 ### Modified Capabilities
 
-<!-- 需求有变化的已有能力。仅在 spec 层面行为变化时列出。查询 openspec/specs/ 中现有 spec 名称。留空表示无需求变更。 -->
-- `<existing-name>`: <变更内容>
+<!-- Existing capabilities with changed requirements. Only when spec-level behavior changes. -->
+- `<existing-name>`: <change>
 
 ## Impact
 
-<!-- 受影响的代码、API、依赖、系统 -->
+<!-- Affected code, APIs, dependencies, systems -->
+
+## BCF (Core Business Flows)
+
+<!-- Identify and list BCF for affected pages.
+BCF = complete loop from entry to exit + acceptance criteria.
+Required for medium/high changes. -->
+
+| BCF | Entry | Key Steps | Exit | Acceptance Criteria |
+|-----|-------|-----------|------|---------------------|
+| BCF-1 | <!-- entry page --> | <!-- step1 -> step2 -> ... --> | <!-- exit page --> | <!-- how to verify --> |
 
 ## Out of Scope
 
-<!-- 明确排除的范围（来自用户约束）。 -->
+<!-- Explicitly excluded scope. If BCF doesn't apply, explain why here. -->
+
+## Acceptance
+
+- [ ] All BCF paths verified
+- [ ] No placeholder components (all controls have real handlers)
+- [ ] UI consumes real API data
+- [ ] Code compiles without errors

@@ -1,18 +1,28 @@
-schema: spec-driven
-
+schema: rapid
 context: |
-  You are an AI agent working with OpenSpec changes.
-  This General Openspec instance uses the opsx: command prefix.
-
+  Windows + PowerShell + Cursor 环境。
+  包管理器：pnpm。
+  项目类型：前端为主（React/Vite），部分 Node.js backend。
 rules:
   proposal:
+    - 必须识别并列出受影响页面的"核心业务路径 (BCF)"
+    - 每个 BCF 必须包含从入口到出口的完整跳转闭环
+    - BCF 格式：入口页 -> 关键步骤 -> 出口页 + 验收标准
     - 必须包含 acceptance criteria
-
+  tasks:
+    - 所有按钮、链接、表单控件必须绑定真实 onClick/handler
+    - 点击无响应的 UI 视为 Bug，不接受
+    - 必须验证 UI 真实消费了 API 返回的数据
+    - 后端返回的 id/title 等字段必须在 UI 层被正确提取和使用
+    - 每个 task 完成后记录 BASELINE，用户确认后再 commit
+  verify:
+    - 严禁逻辑缺失、点击无响应、或仅在 Mock 环境通过的代码
+    - 每个 PR 必须附带"真实环境 BCF 验证报告"
+    - E2E 冒烟测试必须连接真实后端，不能只跑 Mock
+  apply:
+    - 实现时必须按 layer 优先级：engine > backend > editor > runtime > ui-skin > meta
 opsx:
-  version: "0.1.0"
-
-  profile: core-light
-
+  version: 0.3.0
   layers:
     priority:
       - engine
@@ -36,39 +46,59 @@ opsx:
       ui-skin:
         - packages/ui/src/
         - packages/components/src/
-
+      meta:
+        - docs/
+        - scripts/
   verify:
-    engine:
-      typecheck: echo "[verify] engine layer typecheck (stub)"
-      test: echo "[verify] engine layer test (stub)"
-    backend:
-      typecheck: echo "[verify] backend layer typecheck (stub)"
-      test: echo "[verify] backend layer test (stub)"
-    editor:
-      typecheck: echo "[verify] editor layer typecheck (stub)"
-      test: echo "[verify] editor layer test (stub)"
-    runtime:
-      typecheck: echo "[verify] runtime layer typecheck (stub)"
-      test: echo "[verify] runtime layer test (stub)"
-    ui-skin:
-      typecheck: echo "[verify] ui-skin layer typecheck (stub)"
-    meta:
-      typecheck: echo "[verify] meta layer verified"
-      test: echo "[verify] meta layer test (stub)"
     default:
-      typecheck: echo "[verify] default typecheck (stub)"
-      test: echo "[verify] default test (stub)"
-
+      typecheck: pnpm typecheck
+      test: pnpm test
+    e2e:
+      smoke: pnpm exec playwright test --project=smoke
+      full: pnpm exec playwright test
+  change_class:
+    low:
+      schema: rapid
+      description: 样式/文案/UI 改版
+      artifacts:
+        - proposal
+        - tasks
+      rules:
+        verify: advisory
+        bcf: false
+    medium:
+      schema: spec-driven
+      description: 触及 store / API contract / engine 层
+      artifacts:
+        - proposal
+        - specs
+        - design
+        - tasks
+      rules:
+        verify: required
+        bcf: true
+        e2e: true
+    high:
+      schema: spec-driven
+      description: 架构决策 / 数据模型 / 跨层重构
+      artifacts:
+        - proposal
+        - specs
+        - design
+        - tasks
+      rules:
+        verify: required
+        bcf: true
+        e2e: true
+        bcf_report: required
   gates:
     schema_preflight: false
     artifact_precondition: false
     test_attribution: false
     archive_requires_verify: false
-
   git:
     auto_commit: false
     commit_prefix: "[opsx]"
-
   profiles:
     default: core-light
     strict-review:
@@ -81,3 +111,4 @@ opsx:
         artifact_precondition: true
         test_attribution: true
         archive_requires_verify: true
+defaultSchema: rapid

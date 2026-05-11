@@ -1,0 +1,18 @@
+name: rapid
+version: 1
+description: 快速迭代：proposal + tasks，适合 low 级别变更
+artifacts:
+  - id: proposal
+    generates: proposal.md
+    description: High-level description of the change, its motivation, scope, and BCF
+    template: proposal.md
+    requires: []
+  - id: tasks
+    generates: tasks.md
+    description: Implementation checklist with trackable tasks, grouped by layer
+    template: tasks.md
+    requires: [proposal]
+apply:
+  requires:
+    - tasks
+  tracks: tasks.md

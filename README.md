@@ -1,144 +1,63 @@
-# General Openspec v0.1
+# General Openspec
 
-> OpenSpec Skill 系统的可移植版本，可复制到任何项目作为 spec-driven 开发框架。
+> OpenSpec v1.3.1 — 可移植的 spec-driven 开发框架。
 
-## 内容
+将整个目录复制到目标项目根目录即可使用。无需 fork 维护，跟随官方 CLI 升级同步。
 
-```
-.
-├── .cursor/                          # 隐藏文件夹（需显示隐藏项目）
-│   ├── commands/                      # 13 个 Slash 命令入口
-│   │   ├── opsx%3Aonboard.md
-│   │   ├── opsx%3Async.md
-│   │   ├── opsx%3Aexplore.md
-│   │   ├── opsx%3Apropose.md
-│   │   ├── opsx%3Areview.md
-│   │   ├── opsx%3Aapply.md
-│   │   ├── opsx%3Averify.md
-│   │   ├── opsx%3Aarchive.md
-│   │   ├── opsx%3Adebug.md
-│   │   ├── opsx%3Aplan.md
-│   │   ├── opsx%3Acontinue.md
-│   │   ├── opsx%3Askip.md
-│   │   └── opsx%3Async-specs.md
-│   └── skills/                        # 15 个 OpenSpec 技能 + 5 个 GA 技能
-│       ├── openspec-onboard/
-│       ├── openspec-sync/
-│       ├── openspec-sync-specs/
-│       ├── openspec-explore/
-│       ├── openspec-propose/
-│       ├── openspec-review/           # 含 Test Design
-│       ├── openspec-apply/
-│       ├── openspec-continue/
-│       ├── openspec-skip/
-│       ├── openspec-verify/
-│       ├── openspec-archive/
-│       ├── openspec-debug/
-│       ├── openspec-plan/
-│       ├── openspec-skill/
-│       ├── ga-upgrade/
-│       ├── ga-export/
-│       ├── ga-test/
-│       ├── ga-report/
-│       ├── ga-skill/
-│       └── _shared/
-│
-└── openspec/
-    ├── schemas/                       # Artifact schema 定义
-    ├── specs/                         # 技能系统设计规范
-    └── config.yaml                    # 项目配置
-```
-
-## 命令分层
-
-### Core（默认 — 新手从这里开始）
-
-| Command | 用途 |
-|---------|------|
-| `/opsx:propose` | 创建 change，一次性生成完整 artifacts |
-| `/opsx:explore` | 探索代码库，理清思路 |
-| `/opsx:apply` | 实现 tasks |
-| `/opsx:archive` | 完成后归档 |
-
-### Strict（通过 `opsx.profile: strict-review` 启用）
-
-| Command | 用途 |
-|---------|------|
-| `/opsx:verify` | 归档前检查实现一致性 |
-| `/opsx:review` | 正式设计评审 |
-| `/opsx:debug` | 调试 apply 阶段问题 |
-| `/opsx:sync-specs` | 将 delta specs 同步到 main |
-
-### Meta（高级用户 / 多 change 编排）
-
-| Command | 用途 |
-|---------|------|
-| `/opsx:continue` | 从断点恢复继续 apply |
-| `/opsx:skip` | 跳过 task 或中止 change |
-| `/opsx:plan` | 多 change 编排 |
-| `/opsx:onboard` | 首次使用？从这里开始 |
-| `/opsx:sync` | 同步 CLI 和 skill 系统 |
-
-## 使用方法
-
-### 1. 复制到目标项目
-
-将整个目录内容复制到你的项目根目录（`.cursor` 文件夹需要显示隐藏项目才能看到）。
-
-### 2. 安装前提
+## 安装
 
 ```bash
 npm install -g @fission-ai/openspec@latest
 ```
 
-### 3. 初始化
+## 核心命令
 
-在 Cursor 中运行：
+| 命令 | 用途 |
+|------|------|
+| `/opsx:explore` | 探索代码库，理清思路 |
+| `/opsx:propose` | 创建 change，一次性生成 artifacts |
+| `/opsx:apply` | 实现 tasks，逐项勾选 |
+| `/opsx:verify` | 验证实现一致性 |
+| `/opsx:archive` | 归档完成的 change |
 
-```
-/opsx:onboard
-```
+## 变更分级
 
-### 4. 开始工作流
+| 级别 | Schema | 场景 |
+|------|--------|------|
+| `low` | `rapid` | 样式/文案/UI 改版 |
+| `medium` | `medium` | 触及 store / API / engine 层 |
+| `high` | `high` | 架构决策 / 数据模型 / 跨层重构 |
 
-```
-/opsx:propose <name>  → 创建 change
-/opsx:review           → 评审 design 决策
-/opsx:apply           → 实现 tasks
-/opsx:verify          → 验证实现一致性
-/opsx:archive         → 归档完成的 change
-```
+## 质量门禁
 
-## Change 生命周期
+所有变更必须满足：
 
-```
-┌─────────────────────────────────────────────────────────┐
-│  /opsx:propose <name>                                 │
-│  自动检测初始化 → 推断 change_class → 生成 artifacts    │
-│  ↓                                                     │
-│  /opsx:review                                         │
-│  结构分析闭环 → 评审 design 决策                        │
-│  ↓                                                     │
-│  /opsx:apply                                          │
-│  按 layer 优先级执行 → 增量验证 → 断点续传              │
-│  ↓ 遇到问题                                            │
-│  /opsx:debug                                          │
-│  诊断 → 修复 → 继续 apply                              │
-│  ↓ 所有 task 完成                                      │
-│  /opsx:verify                                         │
-│  Full + coherence-lite                                 │
-│  ↓ 全部通过                                            │
-│  /opsx:archive                                        │
-│  最终确认 → 归档                                        │
-└─────────────────────────────────────────────────────────┘
+- **BCF（核心业务路径）** — 每个 medium/high 变更必须识别并验证受影响的核心路径
+- **禁止占位组件** — 所有按钮/链接/表单控件必须绑定真实 handler
+- **真实环境验证** — E2E 冒烟测试必须连接真实后端，不能只跑 Mock
+- **数据消费验证** — UI 层必须真实提取并使用 API 返回的 key 字段
+
+## 升级
+
+```bash
+npm install -g @fission-ai/openspec@latest
+openspec update
 ```
 
-## Layer 执行优先级
+`openspec/config.yaml` 和 `openspec/schemas/` 完全不受影响。
+
+## 目录结构
 
 ```
-engine > backend > editor > runtime > ui-skin > meta
+openspec/
+├── config.yaml          ← 所有定制（layer 映射、rules、verify 命令）
+├── schemas/
+│   ├── rapid/           ← 一页版：proposal + tasks
+│   ├── medium/          ← 中等：proposal + specs + design + review + tasks
+│   └── high/            ← 高复杂：完整 artifact + BCF 验证报告
+├── specs/               ← 主 specs（source of truth）
+└── changes/             ← 变更目录
+.cursor/
+├── commands/            ← 5 个命令入口
+└── skills/              ← 官方 skill 文件
 ```
-
-## 版本
-
-v0.1 — General Openspec 独立版本体系

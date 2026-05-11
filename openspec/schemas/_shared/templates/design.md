@@ -1,47 +1,47 @@
 ---
 name: design-template
-description: Design 文档模板。记录技术决策和替代方案分析。
+description: Design document template. Technical decisions and alternative analysis.
 schema: _shared
 ---
 
 ## Context
 
-<!-- 背景、现状、约束、利益相关方 -->
+<!-- Background, current state, constraints, stakeholders -->
 
 ## Goals / Non-Goals
 
 **Goals:**
-<!-- 本设计要达成什么 -->
+<!-- What this design achieves -->
 
 **Non-Goals:**
-<!-- 明确不包含什么 -->
+<!-- What is explicitly excluded -->
 
 ## Decisions
 
-每条决策使用 `D1`、`D2`... 前缀编号，供 `/opsx-review` 阶段引用。
+Each decision uses `D1`, `D2`... prefix for referencing during review.
 
-### D1: [决策标题]
+### D1: [Decision Title]
 
-**选择**：<选了什么>
-**理由**：<为什么选这个而不是替代方案>
-**替代方案**：
-- ~~[替代方案A]~~ — <被排除的理由>
-- ~~[替代方案B]~~ — <被排除的理由>
+**Choice**: <what was chosen>
+**Rationale**: <why over alternatives>
+**Alternatives**:
+- ~~[Alternative A]~~ — <reason excluded>
+- ~~[Alternative B]~~ — <reason excluded>
 
 ---
 
-### D2: [决策标题]
+### D2: [Decision Title]
 
 ...
 
 ## Risks / Trade-offs
 
-<!-- 已知局限、可能出错的地方 -->
+<!-- Known limitations, potential failure points -->
 
 ## Migration Plan
 
-<!-- 部署步骤、rollback 策略 -->
+<!-- Deployment steps, rollback strategy -->
 
 ## Open Questions
 
-<!-- 仍需确认的决策或未知项 -->
+<!-- Outstanding decisions or unknowns -->
