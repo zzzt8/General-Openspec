@@ -17,8 +17,8 @@
 | 级别 | Schema | 场景 |
 |------|--------|------|
 | `low` | `rapid` | 样式/文案/UI 改版 |
-| `medium` | `spec-driven` | 触及 store / API / engine 层 |
-| `high` | `spec-driven` | 架构决策 / 数据模型 / 跨层重构 |
+| `medium` | `medium` | 触及 store / API / engine 层 |
+| `high` | `high` | 架构决策 / 数据模型 / 跨层重构 |
 
 ## 工作流
 

@@ -12,13 +12,14 @@ rules:
   tasks:
     - 所有按钮、链接、表单控件必须绑定真实 onClick/handler
     - 点击无响应的 UI 视为 Bug，不接受
-    - 必须验证 UI 真实消费了 API 返回的数据
-    - 后端返回的 id/title 等字段必须在 UI 层被正确提取和使用
+    - 必须验证 UI / executor / workflow JSON 真实消费了关键数据字段
+    - 后端返回的 id/title/nodeId/workflowId 等字段必须在对应层被正确提取和使用
     - 每个 task 完成后记录 BASELINE，用户确认后再 commit
+phase_rules:
   verify:
     - 严禁逻辑缺失、点击无响应、或仅在 Mock 环境通过的代码
-    - 每个 PR 必须附带"真实环境 BCF 验证报告"
-    - E2E 冒烟测试必须连接真实后端，不能只跑 Mock
+    - 每个变更必须附带 BCF 验证报告（真实 dev-tool 启动 → workflow JSON 生成 → executor 执行 → 输出验证）
+    - 若无后端依赖，则验证真实运行链路；若存在后端/数据库，则 E2E 测试必须连接真实后端
   apply:
     - 实现时必须按 layer 优先级：engine > backend > editor > runtime > ui-skin > meta
 opsx:
@@ -67,7 +68,7 @@ opsx:
         verify: advisory
         bcf: false
     medium:
-      schema: spec-driven
+      schema: medium
       description: 触及 store / API contract / engine 层
       artifacts:
         - proposal
@@ -79,7 +80,7 @@ opsx:
         bcf: true
         e2e: true
     high:
-      schema: spec-driven
+      schema: high
       description: 架构决策 / 数据模型 / 跨层重构
       artifacts:
         - proposal

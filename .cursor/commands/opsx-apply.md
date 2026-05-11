@@ -1,5 +1,5 @@
 ---
-name: /opsx-apply
+name: /opsx:apply
 id: opsx-apply
 category: Workflow
 description: Implement tasks from an OpenSpec change (Experimental)
@@ -143,6 +143,12 @@ What would you like to do?
 - Update task checkbox immediately after completing each task
 - Pause on errors, blockers, or unclear requirements - don't guess
 - Use contextFiles from CLI output, don't assume specific file names
+
+**允许局部查证代码（apply 阶段）：**
+- 仅限与当前 task 直接相关的文件
+- 不得重新探索全仓库
+- 不得改变 proposal / scope
+- 若发现设计不成立，暂停并建议更新 artifacts
 
 **Fluid Workflow Integration**
 
